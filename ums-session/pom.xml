@@ -22,6 +22,12 @@
             <artifactId>session-rest</artifactId>
         </dependency>
 
+        <!-- stars session-server-sdk -->
+        <dependency>
+            <groupId>com.wondernect.stars</groupId>
+            <artifactId>session-server-sdk</artifactId>
+        </dependency>
+
         <!-- stars user-server-sdk -->
         <dependency>
             <groupId>com.wondernect.stars</groupId>
