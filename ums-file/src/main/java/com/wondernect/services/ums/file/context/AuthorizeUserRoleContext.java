@@ -2,11 +2,9 @@ package com.wondernect.services.ums.file.context;
 
 import com.wondernect.elements.authorize.context.impl.AbstractWondernectAuthorizeContext;
 import com.wondernect.elements.common.exception.BusinessException;
-import com.wondernect.elements.common.response.BusinessData;
 import com.wondernect.elements.common.utils.ESObjectUtils;
 import com.wondernect.stars.session.dto.code.CodeAuthRequestDTO;
-import com.wondernect.stars.session.dto.code.CodeResponseDTO;
-import com.wondernect.stars.session.feign.codeSession.CodeSessionFeignClient;
+import com.wondernect.stars.session.feign.codeSession.CodeSessionServerService;
 import com.wondernect.stars.user.dto.UserResponseDTO;
 import com.wondernect.stars.user.feign.user.UserServerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,18 +19,14 @@ import org.springframework.stereotype.Component;
 public class AuthorizeUserRoleContext extends AbstractWondernectAuthorizeContext {
 
     @Autowired
-    private CodeSessionFeignClient codeSessionFeignClient;
+    private CodeSessionServerService codeSessionServerService;
 
     @Autowired
     private UserServerService userServerService;
 
     @Override
     public String authorizeExpiresToken(String authorizeToken) {
-        BusinessData<CodeResponseDTO> codeResponseDTOBusinessData = codeSessionFeignClient.authCache(new CodeAuthRequestDTO(authorizeToken));
-        if (!codeResponseDTOBusinessData.success()){
-            throw  new BusinessException(codeResponseDTOBusinessData);
-        }
-        return codeResponseDTOBusinessData.getData().getUserId();
+        return codeSessionServerService.authCache(new CodeAuthRequestDTO(authorizeToken)).getUserId();
     }
 
     @Override
