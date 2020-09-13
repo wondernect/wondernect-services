@@ -37,9 +37,4 @@ public class AuthorizeUserRoleContext extends AbstractWondernectAuthorizeContext
         }
         return userResponseDTO.getRoleId();
     }
-
-    @Override
-    public boolean authorizeAppSecret(String appId, String encryptSecret) {
-        return true;
-    }
 }

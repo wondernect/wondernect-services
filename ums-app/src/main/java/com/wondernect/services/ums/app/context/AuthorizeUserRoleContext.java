@@ -1,4 +1,4 @@
-package com.wondernect.services.ums.rbac.context;
+package com.wondernect.services.ums.app.context;
 
 import com.wondernect.elements.authorize.context.impl.AbstractWondernectAuthorizeContext;
 import com.wondernect.elements.common.exception.BusinessException;

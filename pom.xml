@@ -23,6 +23,7 @@
     </properties>
 
     <modules>
+        <module>ums-app</module>
         <module>ums-user</module>
         <module>ums-rbac</module>
         <module>ums-file</module>
