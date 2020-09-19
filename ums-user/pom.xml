@@ -16,22 +16,16 @@
     <description>Demo project for Spring Boot</description>
 
     <dependencies>
-        <!-- stars user-rest -->
-        <dependency>
-            <groupId>com.wondernect.stars</groupId>
-            <artifactId>user-rest</artifactId>
-        </dependency>
-
         <!-- stars session-server-sdk -->
         <dependency>
             <groupId>com.wondernect.stars</groupId>
             <artifactId>session-server-sdk</artifactId>
         </dependency>
 
-        <!-- stars app-server-sdk -->
+        <!-- stars user-server-sdk -->
         <dependency>
             <groupId>com.wondernect.stars</groupId>
-            <artifactId>app-server-sdk</artifactId>
+            <artifactId>user-server-sdk</artifactId>
         </dependency>
 
         <!-- mysql connector -->
@@ -39,6 +33,12 @@
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>8.0.11</version>
+        </dependency>
+
+        <!-- rdb -->
+        <dependency>
+            <groupId>com.wondernect.elements</groupId>
+            <artifactId>rdb</artifactId>
         </dependency>
     </dependencies>
 

@@ -64,16 +64,22 @@
             <artifactId>log</artifactId>
         </dependency>
 
-        <!-- elements easyoffice -->
-        <dependency>
-            <groupId>com.wondernect.elements</groupId>
-            <artifactId>easyoffice</artifactId>
-        </dependency>
-
         <!-- elements swagger-api -->
         <dependency>
             <groupId>com.wondernect.elements</groupId>
             <artifactId>swagger-api</artifactId>
+        </dependency>
+
+        <!-- elements authorize-context -->
+        <dependency>
+            <groupId>com.wondernect.elements</groupId>
+            <artifactId>authorize-context</artifactId>
+        </dependency>
+
+        <!-- elements boot-application -->
+        <dependency>
+            <groupId>com.wondernect.elements</groupId>
+            <artifactId>boot-application</artifactId>
         </dependency>
     </dependencies>
 

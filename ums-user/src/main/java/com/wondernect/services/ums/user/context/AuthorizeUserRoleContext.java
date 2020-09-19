@@ -1,15 +1,12 @@
 package com.wondernect.services.ums.user.context;
 
 import com.wondernect.elements.authorize.context.impl.AbstractWondernectAuthorizeContext;
+import com.wondernect.elements.common.exception.BusinessException;
 import com.wondernect.elements.common.utils.ESObjectUtils;
-import com.wondernect.stars.app.dto.AuthAppRequestDTO;
-import com.wondernect.stars.app.feign.app.AppServerService;
 import com.wondernect.stars.session.dto.code.CodeAuthRequestDTO;
 import com.wondernect.stars.session.feign.codeSession.CodeSessionServerService;
-import com.wondernect.stars.user.common.error.UserErrorEnum;
-import com.wondernect.stars.user.common.exception.UserException;
-import com.wondernect.stars.user.model.User;
-import com.wondernect.stars.user.service.user.UserService;
+import com.wondernect.stars.user.dto.UserResponseDTO;
+import com.wondernect.stars.user.feign.user.UserServerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -25,10 +22,7 @@ public class AuthorizeUserRoleContext extends AbstractWondernectAuthorizeContext
     private CodeSessionServerService codeSessionServerService;
 
     @Autowired
-    private AppServerService appServerService;
-
-    @Autowired
-    private UserService userService;
+    private UserServerService userServerService;
 
     @Override
     public String authorizeExpiresToken(String authorizeToken) {
@@ -36,16 +30,11 @@ public class AuthorizeUserRoleContext extends AbstractWondernectAuthorizeContext
     }
 
     @Override
-    public String authorizeAppSecret(String appId, String encryptSecret) {
-        return appServerService.auth(appId, new AuthAppRequestDTO(encryptSecret)).getId();
-    }
-
-    @Override
     public String getUserRole(String userId) {
-        User user = userService.findEntityById(userId);
-        if (ESObjectUtils.isNull(user)) {
-            throw new UserException(UserErrorEnum.USER_NOT_FOUND);
+        UserResponseDTO userResponseDTO = userServerService.detail(userId);
+        if (ESObjectUtils.isNull(userResponseDTO)) {
+            throw new BusinessException("用户信息不存在");
         }
-        return user.getRoleId();
+        return userResponseDTO.getRoleId();
     }
 }

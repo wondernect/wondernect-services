@@ -2,17 +2,11 @@ package com.wondernect.services.ums.session.context;
 
 import com.wondernect.elements.authorize.context.impl.AbstractWondernectAuthorizeContext;
 import com.wondernect.elements.common.exception.BusinessException;
-import com.wondernect.elements.common.response.BusinessData;
 import com.wondernect.elements.common.utils.ESObjectUtils;
-import com.wondernect.stars.app.dto.AuthAppRequestDTO;
-import com.wondernect.stars.app.feign.app.AppServerService;
 import com.wondernect.stars.session.dto.code.CodeAuthRequestDTO;
-import com.wondernect.stars.session.dto.code.CodeResponseDTO;
-import com.wondernect.stars.session.feign.codeSession.CodeSessionFeignClient;
-import com.wondernect.stars.session.service.code.CodeSessionService;
+import com.wondernect.stars.session.feign.codeSession.CodeSessionServerService;
 import com.wondernect.stars.user.dto.UserResponseDTO;
 import com.wondernect.stars.user.feign.user.UserServerService;
-import org.omg.CORBA.UserException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -25,22 +19,14 @@ import org.springframework.stereotype.Component;
 public class AuthorizeUserRoleContext extends AbstractWondernectAuthorizeContext {
 
     @Autowired
-    private CodeSessionService codeSessionService;
-
-    @Autowired
-    private AppServerService appServerService;
+    private CodeSessionServerService codeSessionServerService;
 
     @Autowired
     private UserServerService userServerService;
 
     @Override
     public String authorizeExpiresToken(String authorizeToken) {
-        return codeSessionService.authCodeSession(new CodeAuthRequestDTO(authorizeToken)).getUserId();
-    }
-
-    @Override
-    public String authorizeAppSecret(String appId, String encryptSecret) {
-        return appServerService.auth(appId, new AuthAppRequestDTO(encryptSecret)).getId();
+        return codeSessionServerService.authCache(new CodeAuthRequestDTO(authorizeToken)).getUserId();
     }
 
     @Override

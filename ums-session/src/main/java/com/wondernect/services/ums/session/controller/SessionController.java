@@ -2,6 +2,7 @@ package com.wondernect.services.ums.session.controller;
 
 import com.wondernect.elements.authorize.context.WondernectCommonContext;
 import com.wondernect.elements.authorize.context.interceptor.AuthorizeRoleType;
+import com.wondernect.elements.authorize.context.interceptor.AuthorizeServer;
 import com.wondernect.elements.authorize.context.interceptor.AuthorizeType;
 import com.wondernect.elements.authorize.context.interceptor.AuthorizeUserRole;
 import com.wondernect.elements.common.error.BusinessError;
@@ -12,7 +13,7 @@ import com.wondernect.services.ums.session.dto.LoginRequestDTO;
 import com.wondernect.services.ums.session.dto.LoginResponseDTO;
 import com.wondernect.stars.session.dto.code.CodeRequestDTO;
 import com.wondernect.stars.session.dto.code.CodeResponseDTO;
-import com.wondernect.stars.session.service.code.CodeSessionService;
+import com.wondernect.stars.session.feign.codeSession.CodeSessionServerService;
 import com.wondernect.stars.user.dto.UserResponseDTO;
 import com.wondernect.stars.user.dto.auth.local.AuthUserLocalAuthRequestDTO;
 import com.wondernect.stars.user.dto.auth.local.UserLocalAuthResponseDTO;
@@ -51,7 +52,7 @@ public class SessionController {
     private WondernectCommonContext wondernectCommonContext;
 
     @Autowired
-    private CodeSessionService codeSessionService;
+    private CodeSessionServerService codeSessionServerService;
 
     @Autowired
     private UserServerService userServerService;
@@ -78,7 +79,7 @@ public class SessionController {
         }
         wondernectCommonContext.getAuthorizeData().setUserId(userResponseDTO.getId());
         wondernectCommonContext.getAuthorizeData().setRole(userResponseDTO.getRoleId());
-        CodeResponseDTO codeResponseDTO = codeSessionService.requestCodeSession(
+        CodeResponseDTO codeResponseDTO = codeSessionServerService.request(
                 new CodeRequestDTO(
                         userResponseDTO.getId(),
                         "登录",
@@ -95,7 +96,7 @@ public class SessionController {
     @ApiOperation(value = "登出", httpMethod = "POST")
     @PostMapping(value = "/logout")
     public BusinessData logout() {
-        codeSessionService.deleteCacheByCode(wondernectCommonContext.getAuthorizeData().getToken());
+        codeSessionServerService.deleteCache(wondernectCommonContext.getAuthorizeData().getToken());
         return new BusinessData(BusinessError.SUCCESS);
     }
 }
