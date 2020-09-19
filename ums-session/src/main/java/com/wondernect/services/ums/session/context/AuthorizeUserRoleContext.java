@@ -4,6 +4,8 @@ import com.wondernect.elements.authorize.context.impl.AbstractWondernectAuthoriz
 import com.wondernect.elements.common.exception.BusinessException;
 import com.wondernect.elements.common.response.BusinessData;
 import com.wondernect.elements.common.utils.ESObjectUtils;
+import com.wondernect.stars.app.dto.AuthAppRequestDTO;
+import com.wondernect.stars.app.feign.app.AppServerService;
 import com.wondernect.stars.session.dto.code.CodeAuthRequestDTO;
 import com.wondernect.stars.session.dto.code.CodeResponseDTO;
 import com.wondernect.stars.session.feign.codeSession.CodeSessionFeignClient;
@@ -26,11 +28,19 @@ public class AuthorizeUserRoleContext extends AbstractWondernectAuthorizeContext
     private CodeSessionService codeSessionService;
 
     @Autowired
+    private AppServerService appServerService;
+
+    @Autowired
     private UserServerService userServerService;
 
     @Override
     public String authorizeExpiresToken(String authorizeToken) {
         return codeSessionService.authCodeSession(new CodeAuthRequestDTO(authorizeToken)).getUserId();
+    }
+
+    @Override
+    public String authorizeAppSecret(String appId, String encryptSecret) {
+        return appServerService.auth(appId, new AuthAppRequestDTO(encryptSecret)).getId();
     }
 
     @Override

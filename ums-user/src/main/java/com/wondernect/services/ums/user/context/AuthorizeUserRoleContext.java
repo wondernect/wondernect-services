@@ -2,6 +2,8 @@ package com.wondernect.services.ums.user.context;
 
 import com.wondernect.elements.authorize.context.impl.AbstractWondernectAuthorizeContext;
 import com.wondernect.elements.common.utils.ESObjectUtils;
+import com.wondernect.stars.app.dto.AuthAppRequestDTO;
+import com.wondernect.stars.app.feign.app.AppServerService;
 import com.wondernect.stars.session.dto.code.CodeAuthRequestDTO;
 import com.wondernect.stars.session.feign.codeSession.CodeSessionServerService;
 import com.wondernect.stars.user.common.error.UserErrorEnum;
@@ -23,11 +25,19 @@ public class AuthorizeUserRoleContext extends AbstractWondernectAuthorizeContext
     private CodeSessionServerService codeSessionServerService;
 
     @Autowired
+    private AppServerService appServerService;
+
+    @Autowired
     private UserService userService;
 
     @Override
     public String authorizeExpiresToken(String authorizeToken) {
         return codeSessionServerService.authCache(new CodeAuthRequestDTO(authorizeToken)).getUserId();
+    }
+
+    @Override
+    public String authorizeAppSecret(String appId, String encryptSecret) {
+        return appServerService.auth(appId, new AuthAppRequestDTO(encryptSecret)).getId();
     }
 
     @Override

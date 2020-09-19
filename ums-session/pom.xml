@@ -40,6 +40,12 @@
             <artifactId>rbac-server-sdk</artifactId>
         </dependency>
 
+        <!-- stars app-server-sdk -->
+        <dependency>
+            <groupId>com.wondernect.stars</groupId>
+            <artifactId>app-server-sdk</artifactId>
+        </dependency>
+
         <!-- mysql connector -->
         <dependency>
             <groupId>mysql</groupId>
