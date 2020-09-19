@@ -27,19 +27,6 @@
             <groupId>com.wondernect.stars</groupId>
             <artifactId>user-server-sdk</artifactId>
         </dependency>
-
-        <!-- mysql connector -->
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <version>8.0.11</version>
-        </dependency>
-
-        <!-- rdb -->
-        <dependency>
-            <groupId>com.wondernect.elements</groupId>
-            <artifactId>rdb</artifactId>
-        </dependency>
     </dependencies>
 
     <build>
