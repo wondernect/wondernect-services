@@ -29,7 +29,7 @@ import java.util.List;
  * Description:
  */
 @RestController
-@RequestMapping(value = "/v1/wondernect/rbac/operation")
+@RequestMapping(value = "/v1/ums/rbac/operation")
 @Validated
 @Api(tags = "操作", description = "操作")
 public class OperationController {

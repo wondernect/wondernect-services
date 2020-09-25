@@ -29,7 +29,7 @@ import java.util.List;
  * Description:
  */
 @RestController
-@RequestMapping(value = "/v1/wondernect/rbac/role")
+@RequestMapping(value = "/v1/ums/rbac/role")
 @Validated
 @Api(tags = "角色", description = "角色")
 public class RoleController {

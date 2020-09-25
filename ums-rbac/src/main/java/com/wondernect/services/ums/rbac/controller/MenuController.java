@@ -26,7 +26,7 @@ import java.util.List;
  * Description:
  */
 @RestController
-@RequestMapping(value = "/v1/wondernect/rbac/menu")
+@RequestMapping(value = "/v1/ums/rbac/menu")
 @Validated
 @Api(tags = "菜单", description = "菜单")
 public class MenuController {

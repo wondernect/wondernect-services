@@ -29,7 +29,7 @@ import java.util.List;
  * Description:
  */
 @RestController
-@RequestMapping(value = "/v1/wondernect/file/path")
+@RequestMapping(value = "/v1/ums/file/path")
 @Validated
 @Api(tags = "本地文件存储路径", description = "本地文件存储路径")
 public class LocalFilePathController {

@@ -23,7 +23,7 @@ import java.util.List;
  *
  * @author chenxun 2020-09-13 23:02:01
  **/
-@RequestMapping(value = "/v1/wondernect/app")
+@RequestMapping(value = "/v1/ums/app")
 @RestController
 @Validated
 @Api(tags = "应用接口")

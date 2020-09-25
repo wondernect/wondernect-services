@@ -43,7 +43,7 @@ import javax.validation.constraints.NotNull;
 @Api(tags = "会话管理(登入、登出)")
 @Validated
 @RestController
-@RequestMapping(value = "/v1/wondernect/session")
+@RequestMapping(value = "/v1/ums/session")
 public class SessionController {
 
     private static final Logger logger = LoggerFactory.getLogger(SessionController.class);

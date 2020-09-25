@@ -31,7 +31,7 @@ import java.util.List;
 @Api(tags = "用户", description = "用户")
 @Validated
 @RestController
-@RequestMapping(value = "/v1/wondernect/user")
+@RequestMapping(value = "/v1/ums/user")
 public class UserController {
 
     @Autowired
