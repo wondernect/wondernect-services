@@ -3,12 +3,17 @@ package com.wondernect.services.ums.file.controller;
 import com.wondernect.elements.authorize.context.interceptor.AuthorizeRoleType;
 import com.wondernect.elements.authorize.context.interceptor.AuthorizeType;
 import com.wondernect.elements.authorize.context.interceptor.AuthorizeUserRole;
+import com.wondernect.elements.common.exception.BusinessException;
 import com.wondernect.elements.common.response.BusinessData;
+import com.wondernect.elements.common.utils.ESObjectUtils;
+import com.wondernect.elements.common.utils.ESStringUtils;
 import com.wondernect.elements.rdb.response.PageResponseData;
 import com.wondernect.stars.file.dto.FileResponseDTO;
 import com.wondernect.stars.file.dto.ListFileRequestDTO;
+import com.wondernect.stars.file.dto.LocalFilePathResponseDTO;
 import com.wondernect.stars.file.dto.PageFileRequestDTO;
 import com.wondernect.stars.file.feign.local.LocalFileFeignClient;
+import com.wondernect.stars.file.feign.path.LocalFilePathServerService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -17,6 +22,7 @@ import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotBlank;
@@ -39,6 +45,9 @@ public class LocalFileController {
     @Autowired
     private LocalFileFeignClient localFileFeignClient;
 
+    @Autowired
+    private LocalFilePathServerService localFilePathServerService;
+
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
     @ApiOperation(value = "上传文件", httpMethod = "POST")
     @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -59,7 +68,16 @@ public class LocalFileController {
             @ApiParam(required = true) @NotBlank(message = "文件获取标识不能为空") @RequestParam(value = "file_key", required = false) String fileKey,
             HttpServletRequest httpServletRequest
     ) {
-        return localFileFeignClient.wechatUpload(fileType, pathId, fileKey, httpServletRequest);
+        LocalFilePathResponseDTO localFilePathResponseDTO = localFilePathServerService.get(pathId);
+        if (ESObjectUtils.isNull(localFilePathResponseDTO)) {
+            throw new BusinessException("文件存储路径不存在");
+        }
+        if (ESStringUtils.isBlank(localFilePathResponseDTO.getSubFilePath())) {
+            throw new BusinessException("文件存储路径为空");
+        }
+        MultipartHttpServletRequest multipartHttpServletRequest = (MultipartHttpServletRequest) httpServletRequest;
+        MultipartFile file = multipartHttpServletRequest.getFile(fileKey);
+        return localFileFeignClient.upload(fileType, pathId, file);
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
