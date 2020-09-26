@@ -5,6 +5,7 @@ import com.wondernect.elements.authorize.context.interceptor.AuthorizeType;
 import com.wondernect.elements.authorize.context.interceptor.AuthorizeUserRole;
 import com.wondernect.elements.common.response.BusinessData;
 import com.wondernect.elements.rdb.response.PageResponseData;
+import com.wondernect.services.ums.user.config.UserConfigProperties;
 import com.wondernect.stars.user.dto.ListUserRequestDTO;
 import com.wondernect.stars.user.dto.PageUserRequestDTO;
 import com.wondernect.stars.user.dto.SaveUserRequestDTO;
@@ -35,6 +36,9 @@ import java.util.List;
 public class UserController {
 
     @Autowired
+    private UserConfigProperties userConfigProperties;
+
+    @Autowired
     private UserFeignClient userFeignClient;
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
@@ -53,6 +57,16 @@ public class UserController {
             @ApiParam(required = true) @NotBlank(message = "请求参数不能为空") @PathVariable(value = "id", required = false) String userId
     ) {
         return userFeignClient.disable(userId);
+    }
+
+    @ApiOperation(value = "自主注册", httpMethod = "POST")
+    @PostMapping(value = "/regist")
+    public BusinessData<UserResponseDTO> regist(
+            @ApiParam(required = true) @NotNull(message = "请求参数不能为空") @Validated @RequestBody SaveUserRequestDTO saveUserRequestDTO
+    ) {
+        saveUserRequestDTO.setRoleTypeId(userConfigProperties.getRoleTypeId());
+        saveUserRequestDTO.setRoleId(userConfigProperties.getRoleId());
+        return userFeignClient.create(saveUserRequestDTO);
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
