@@ -91,9 +91,9 @@ public class MenuController {
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
     @ApiOperation(value = "菜单树形结构", httpMethod = "GET")
-    @GetMapping(value = "/{root_menu_code}/tree")
+    @GetMapping(value = "/tree")
     public BusinessData<MenuTreeResponseDTO> tree(
-            @ApiParam(required = true) @NotBlank(message = "请求参数不能为空") @PathVariable(value = "root_menu_code", required = false) String rootMenuCode
+            @ApiParam(required = false) @RequestParam(value = "root_menu_code", required = false) String rootMenuCode
     ) {
         return menuFeignClient.tree(rootMenuCode);
     }
