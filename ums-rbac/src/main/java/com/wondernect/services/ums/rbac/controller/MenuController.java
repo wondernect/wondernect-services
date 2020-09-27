@@ -91,10 +91,10 @@ public class MenuController {
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
     @ApiOperation(value = "菜单树形结构", httpMethod = "GET")
-    @GetMapping(value = "/tree")
+    @GetMapping(value = "/{root_menu_id}/tree")
     public BusinessData<MenuTreeResponseDTO> tree(
-            @ApiParam(required = false) @RequestParam(value = "root_menu_id", required = false) String rootMenuCode
+            @ApiParam(required = true) @NotBlank(message = "根节点菜单不能为空") @RequestParam(value = "root_menu_id", required = false) String rootMenuId
     ) {
-        return menuFeignClient.tree(rootMenuCode);
+        return menuFeignClient.tree(rootMenuId);
     }
 }
