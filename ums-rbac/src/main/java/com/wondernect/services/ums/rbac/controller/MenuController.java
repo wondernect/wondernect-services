@@ -93,7 +93,7 @@ public class MenuController {
     @ApiOperation(value = "菜单树形结构", httpMethod = "GET")
     @GetMapping(value = "/tree")
     public BusinessData<MenuTreeResponseDTO> tree(
-            @ApiParam(required = false) @RequestParam(value = "root_menu_code", required = false) String rootMenuCode
+            @ApiParam(required = false) @RequestParam(value = "root_menu_id", required = false) String rootMenuCode
     ) {
         return menuFeignClient.tree(rootMenuCode);
     }
