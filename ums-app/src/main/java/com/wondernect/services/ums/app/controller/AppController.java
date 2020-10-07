@@ -1,9 +1,11 @@
 package com.wondernect.services.ums.app.controller;
 
+import com.wondernect.elements.authorize.context.WondernectCommonContext;
 import com.wondernect.elements.authorize.context.interceptor.AuthorizeRoleType;
 import com.wondernect.elements.authorize.context.interceptor.AuthorizeType;
 import com.wondernect.elements.authorize.context.interceptor.AuthorizeUserRole;
 import com.wondernect.elements.common.response.BusinessData;
+import com.wondernect.elements.common.utils.ESStringUtils;
 import com.wondernect.elements.rdb.response.PageResponseData;
 import com.wondernect.stars.app.dto.*;
 import com.wondernect.stars.app.feign.app.AppFeignClient;
@@ -31,6 +33,9 @@ public class AppController {
 
     @Autowired
     private AppFeignClient appFeignClient;
+
+    @Autowired
+    private WondernectCommonContext wondernectCommonContext;
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
     @ApiOperation(value = "创建", httpMethod = "POST")
@@ -75,6 +80,9 @@ public class AppController {
     public BusinessData<List<AppResponseDTO>> list(
             @ApiParam(required = true) @NotNull(message = "列表请求参数不能为空") @Validated @RequestBody(required = false) ListAppRequestDTO listAppRequestDTO
     ) {
+        if (ESStringUtils.isBlank(listAppRequestDTO.getUserId())) {
+            listAppRequestDTO.setUserId(wondernectCommonContext.getAuthorizeData().getUserId());
+        }
         return appFeignClient.list(listAppRequestDTO);
     }
 
@@ -84,6 +92,9 @@ public class AppController {
     public BusinessData<PageResponseData<AppResponseDTO>> page(
             @ApiParam(required = true) @NotNull(message = "分页请求参数不能为空") @Validated @RequestBody(required = false) PageAppRequestDTO pageAppRequestDTO
     ) {
+        if (ESStringUtils.isBlank(pageAppRequestDTO.getUserId())) {
+            pageAppRequestDTO.setUserId(wondernectCommonContext.getAuthorizeData().getUserId());
+        }
         return appFeignClient.page(pageAppRequestDTO);
     }
 }
