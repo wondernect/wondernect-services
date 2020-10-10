@@ -56,6 +56,13 @@ public class LocalFilePathController {
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
+    @ApiOperation(value = "获取根节点", httpMethod = "GET")
+    @GetMapping(value = "/root")
+    public BusinessData<LocalFilePathResponseDTO> root() {
+        return localFilePathFeignClient.root();
+    }
+
+    @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
     @ApiOperation(value = "列表", httpMethod = "POST")
     @PostMapping(value = "/list")
     public BusinessData<List<LocalFilePathResponseDTO>> list(

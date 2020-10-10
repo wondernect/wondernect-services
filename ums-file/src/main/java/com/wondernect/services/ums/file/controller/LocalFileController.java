@@ -53,10 +53,25 @@ public class LocalFileController {
     @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public BusinessData<FileResponseDTO> upload(
             @ApiParam(required = false, allowableValues = "IMAGE, IMAGE_FILE, VOICE, VIDEO, FILE") @NotBlank(message = "文件类型不能为空") @RequestParam(value = "file_type", required = false) String fileType,
-            @ApiParam(required = true) @NotBlank(message = "文件存储路径id不能为空") @RequestParam(value = "path_id", required = false) String pathId,
+            @ApiParam(required = false) @RequestParam(value = "path_id", required = false) String pathId,
             @ApiParam(required = true) @RequestPart(value = "file", required = false) MultipartFile file
     ) {
-        return localFileFeignClient.upload(fileType, pathId, file);
+        LocalFilePathResponseDTO localFilePathResponseDTO;
+        if (ESStringUtils.isBlank(pathId)) {
+            localFilePathResponseDTO = localFilePathServerService.root();
+            if (ESObjectUtils.isNull(localFilePathResponseDTO)) {
+                throw new BusinessException("当前应用没有根节点文件存储路径,请先创建");
+            }
+        } else {
+            localFilePathResponseDTO = localFilePathServerService.get(pathId);
+            if (ESObjectUtils.isNull(localFilePathResponseDTO)) {
+                throw new BusinessException("文件存储路径不存在");
+            }
+        }
+        if (ESStringUtils.isBlank(localFilePathResponseDTO.getSubFilePath())) {
+            throw new BusinessException("文件存储路径为空");
+        }
+        return localFileFeignClient.upload(fileType, localFilePathResponseDTO.getId(), file);
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
@@ -64,20 +79,28 @@ public class LocalFileController {
     @PostMapping(value = "/wechat/upload")
     public BusinessData<FileResponseDTO> wechatUpload(
             @ApiParam(required = false, allowableValues = "IMAGE, IMAGE_FILE, VOICE, VIDEO, FILE") @NotBlank(message = "文件类型不能为空") @RequestParam(value = "file_type", required = false) String fileType,
-            @ApiParam(required = true) @NotBlank(message = "文件存储路径id不能为空") @RequestParam(value = "path_id", required = false) String pathId,
+            @ApiParam(required = false) @RequestParam(value = "path_id", required = false) String pathId,
             @ApiParam(required = true) @NotBlank(message = "文件获取标识不能为空") @RequestParam(value = "file_key", required = false) String fileKey,
             HttpServletRequest httpServletRequest
     ) {
-        LocalFilePathResponseDTO localFilePathResponseDTO = localFilePathServerService.get(pathId);
-        if (ESObjectUtils.isNull(localFilePathResponseDTO)) {
-            throw new BusinessException("文件存储路径不存在");
+        LocalFilePathResponseDTO localFilePathResponseDTO;
+        if (ESStringUtils.isBlank(pathId)) {
+            localFilePathResponseDTO = localFilePathServerService.root();
+            if (ESObjectUtils.isNull(localFilePathResponseDTO)) {
+                throw new BusinessException("当前应用没有根节点文件存储路径,请先创建");
+            }
+        } else {
+            localFilePathResponseDTO = localFilePathServerService.get(pathId);
+            if (ESObjectUtils.isNull(localFilePathResponseDTO)) {
+                throw new BusinessException("文件存储路径不存在");
+            }
         }
         if (ESStringUtils.isBlank(localFilePathResponseDTO.getSubFilePath())) {
             throw new BusinessException("文件存储路径为空");
         }
         MultipartHttpServletRequest multipartHttpServletRequest = (MultipartHttpServletRequest) httpServletRequest;
         MultipartFile file = multipartHttpServletRequest.getFile(fileKey);
-        return localFileFeignClient.upload(fileType, pathId, file);
+        return localFileFeignClient.upload(fileType, localFilePathResponseDTO.getId(), file);
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)

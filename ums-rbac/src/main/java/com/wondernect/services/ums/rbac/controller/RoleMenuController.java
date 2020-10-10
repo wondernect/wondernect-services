@@ -3,12 +3,17 @@ package com.wondernect.services.ums.rbac.controller;
 import com.wondernect.elements.authorize.context.interceptor.AuthorizeRoleType;
 import com.wondernect.elements.authorize.context.interceptor.AuthorizeType;
 import com.wondernect.elements.authorize.context.interceptor.AuthorizeUserRole;
+import com.wondernect.elements.common.exception.BusinessException;
 import com.wondernect.elements.common.response.BusinessData;
+import com.wondernect.elements.common.utils.ESObjectUtils;
+import com.wondernect.elements.common.utils.ESStringUtils;
 import com.wondernect.stars.rbac.dto.MenuAuthorityResponseDTO;
 import com.wondernect.stars.rbac.dto.RoleAuthorityResponseDTO;
+import com.wondernect.stars.rbac.dto.menu.MenuResponseDTO;
 import com.wondernect.stars.rbac.dto.rolemenu.RoleMenuRequestDTO;
 import com.wondernect.stars.rbac.dto.rolemenu.RoleMenuResponseDTO;
 import com.wondernect.stars.rbac.dto.rolemenu.RoleMenuTreeResponseDTO;
+import com.wondernect.stars.rbac.feign.menu.MenuServerService;
 import com.wondernect.stars.rbac.feign.roleMenu.RoleMenuFeignClient;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -36,6 +41,9 @@ public class RoleMenuController {
 
     @Autowired
     private RoleMenuFeignClient roleMenuFeignClient;
+
+    @Autowired
+    private MenuServerService menuServerService;
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
     @ApiOperation(value = "勾选菜单", httpMethod = "POST")
@@ -79,9 +87,21 @@ public class RoleMenuController {
     @GetMapping(value = "/tree")
     public BusinessData<RoleMenuTreeResponseDTO> tree(
             @ApiParam(required = true) @NotBlank(message = "请求参数不能为空") @RequestParam(value = "role_id", required = false) String roleId,
-            @ApiParam(required = true) @NotBlank(message = "请求参数不能为空") @RequestParam(value = "menu_id", required = false) String menuId
+            @ApiParam(required = false) @RequestParam(value = "menu_id", required = false) String menuId
     ) {
-        return roleMenuFeignClient.tree(roleId, menuId);
+        MenuResponseDTO menuResponseDTO;
+        if (ESStringUtils.isBlank(menuId)) {
+            menuResponseDTO = menuServerService.root();
+            if (ESObjectUtils.isNull(menuResponseDTO)) {
+                throw new BusinessException("当前应用没有根节点菜单,请先创建");
+            }
+        } else {
+            menuResponseDTO = menuServerService.get(menuId);
+            if (ESObjectUtils.isNull(menuResponseDTO)) {
+                throw new BusinessException("菜单不存在");
+            }
+        }
+        return roleMenuFeignClient.tree(roleId, menuResponseDTO.getId());
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)

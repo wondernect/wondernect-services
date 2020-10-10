@@ -3,10 +3,14 @@ package com.wondernect.services.ums.rbac.controller;
 import com.wondernect.elements.authorize.context.interceptor.AuthorizeRoleType;
 import com.wondernect.elements.authorize.context.interceptor.AuthorizeType;
 import com.wondernect.elements.authorize.context.interceptor.AuthorizeUserRole;
+import com.wondernect.elements.common.exception.BusinessException;
 import com.wondernect.elements.common.response.BusinessData;
+import com.wondernect.elements.common.utils.ESObjectUtils;
+import com.wondernect.elements.common.utils.ESStringUtils;
 import com.wondernect.elements.rdb.response.PageResponseData;
 import com.wondernect.stars.rbac.dto.menu.*;
 import com.wondernect.stars.rbac.feign.menu.MenuFeignClient;
+import com.wondernect.stars.rbac.feign.menu.MenuServerService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -33,6 +37,9 @@ public class MenuController {
 
     @Autowired
     private MenuFeignClient menuFeignClient;
+
+    @Autowired
+    private MenuServerService menuServerService;
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
     @ApiOperation(value = "创建菜单", httpMethod = "POST")
@@ -72,6 +79,13 @@ public class MenuController {
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
+    @ApiOperation(value = "获取菜单根节点", httpMethod = "GET")
+    @GetMapping(value = "/root")
+    public BusinessData<MenuResponseDTO> root() {
+        return menuFeignClient.root();
+    }
+
+    @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
     @ApiOperation(value = "菜单列表", httpMethod = "POST")
     @PostMapping(value = "/list")
     public BusinessData<List<MenuResponseDTO>> list(
@@ -91,10 +105,22 @@ public class MenuController {
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
     @ApiOperation(value = "菜单树形结构", httpMethod = "GET")
-    @GetMapping(value = "/{root_menu_id}/tree")
+    @GetMapping(value = "/tree")
     public BusinessData<MenuTreeResponseDTO> tree(
-            @ApiParam(required = true) @NotBlank(message = "根节点菜单不能为空") @PathVariable(value = "root_menu_id", required = false) String rootMenuId
+            @ApiParam(required = false) @RequestParam(value = "root_menu_id", required = false) String rootMenuId
     ) {
-        return menuFeignClient.tree(rootMenuId);
+        MenuResponseDTO menuResponseDTO;
+        if (ESStringUtils.isBlank(rootMenuId)) {
+            menuResponseDTO = menuServerService.root();
+            if (ESObjectUtils.isNull(menuResponseDTO)) {
+                throw new BusinessException("当前应用没有根节点菜单,请先创建");
+            }
+        } else {
+            menuResponseDTO = menuServerService.get(rootMenuId);
+            if (ESObjectUtils.isNull(menuResponseDTO)) {
+                throw new BusinessException("菜单不存在");
+            }
+        }
+        return menuFeignClient.tree(menuResponseDTO.getId());
     }
 }
