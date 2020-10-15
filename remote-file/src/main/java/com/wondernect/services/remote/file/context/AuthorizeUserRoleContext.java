@@ -4,7 +4,9 @@ import com.wondernect.elements.authorize.context.impl.AbstractWondernectAuthoriz
 import com.wondernect.elements.common.exception.BusinessException;
 import com.wondernect.elements.common.utils.ESObjectUtils;
 import com.wondernect.stars.session.dto.code.CodeAuthRequestDTO;
+import com.wondernect.stars.session.dto.token.TokenAuthRequestDTO;
 import com.wondernect.stars.session.feign.codeSession.CodeSessionServerService;
+import com.wondernect.stars.session.feign.tokenSession.TokenSessionServerService;
 import com.wondernect.stars.user.dto.UserResponseDTO;
 import com.wondernect.stars.user.feign.user.UserServerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,11 +24,19 @@ public class AuthorizeUserRoleContext extends AbstractWondernectAuthorizeContext
     private CodeSessionServerService codeSessionServerService;
 
     @Autowired
+    private TokenSessionServerService tokenSessionServerService;
+
+    @Autowired
     private UserServerService userServerService;
 
     @Override
     public String authorizeExpiresToken(String authorizeToken) {
         return codeSessionServerService.authCache(new CodeAuthRequestDTO(authorizeToken)).getUserId();
+    }
+
+    @Override
+    public String authorizeUnlimitedToken(String authorizeToken) {
+        return tokenSessionServerService.auth(new TokenAuthRequestDTO(authorizeToken)).getUserId();
     }
 
     @Override
