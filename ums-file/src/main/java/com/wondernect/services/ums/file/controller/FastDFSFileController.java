@@ -67,7 +67,7 @@ public class FastDFSFileController {
     @ApiOperation(value = "删除文件", httpMethod = "POST")
     @PostMapping(value = "/{id}/delete")
     public BusinessData deleteById(
-            @ApiParam(required = true) @NotBlank(message = "文件id不能为空") @RequestParam(value = "id", required = false) String id
+            @ApiParam(required = true) @NotBlank(message = "文件id不能为空") @PathVariable(value = "id", required = false) String id
     ) {
         return fastDFSFileFeignClient.deleteById(id);
     }
@@ -76,7 +76,7 @@ public class FastDFSFileController {
     @ApiOperation(value = "获取文件信息", httpMethod = "GET")
     @GetMapping(value = "/{id}/detail")
     public BusinessData<FileResponseDTO> getById(
-            @ApiParam(required = true) @NotBlank(message = "文件id不能为空") @RequestParam(value = "id", required = false) String id
+            @ApiParam(required = true) @NotBlank(message = "文件id不能为空") @PathVariable(value = "id", required = false) String id
     ) {
         return fastDFSFileFeignClient.getById(id);
     }
