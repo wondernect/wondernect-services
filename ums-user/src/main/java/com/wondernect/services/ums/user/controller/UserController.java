@@ -8,7 +8,7 @@ import com.wondernect.elements.rdb.response.PageResponseData;
 import com.wondernect.services.ums.user.config.UserConfigProperties;
 import com.wondernect.stars.user.dto.ListUserRequestDTO;
 import com.wondernect.stars.user.dto.PageUserRequestDTO;
-import com.wondernect.stars.user.dto.SaveUserRequestDTO;
+import com.wondernect.stars.user.dto.SaveLocalUserRequestDTO;
 import com.wondernect.stars.user.dto.UserResponseDTO;
 import com.wondernect.stars.user.feign.user.UserFeignClient;
 import io.swagger.annotations.Api;
@@ -62,7 +62,7 @@ public class UserController {
     @ApiOperation(value = "自主注册", httpMethod = "POST")
     @PostMapping(value = "/regist")
     public BusinessData<UserResponseDTO> regist(
-            @ApiParam(required = true) @NotNull(message = "请求参数不能为空") @Validated @RequestBody SaveUserRequestDTO saveUserRequestDTO
+            @ApiParam(required = true) @NotNull(message = "请求参数不能为空") @Validated @RequestBody SaveLocalUserRequestDTO saveUserRequestDTO
     ) {
         saveUserRequestDTO.setRoleTypeId(userConfigProperties.getRoleTypeId());
         saveUserRequestDTO.setRoleId(userConfigProperties.getRoleId());
@@ -73,9 +73,9 @@ public class UserController {
     @ApiOperation(value = "创建", httpMethod = "POST")
     @PostMapping(value = "/create")
     public BusinessData<UserResponseDTO> create(
-            @ApiParam(required = true) @NotNull(message = "请求参数不能为空") @Validated @RequestBody SaveUserRequestDTO saveUserRequestDTO
+            @ApiParam(required = true) @NotNull(message = "请求参数不能为空") @Validated @RequestBody SaveLocalUserRequestDTO saveLocalUserRequestDTO
     ) {
-        return userFeignClient.create(saveUserRequestDTO);
+        return userFeignClient.create(saveLocalUserRequestDTO);
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
@@ -83,7 +83,7 @@ public class UserController {
     @PostMapping(value = "/{id}/update")
     public BusinessData<UserResponseDTO> update(
             @ApiParam(required = true) @NotBlank(message = "用户id不能为空") @PathVariable(value = "id", required = false) String userId,
-            @ApiParam(required = true) @NotNull(message = "请求参数不能为空") @Validated @RequestBody SaveUserRequestDTO saveUserRequestDTO
+            @ApiParam(required = true) @NotNull(message = "请求参数不能为空") @Validated @RequestBody SaveLocalUserRequestDTO saveUserRequestDTO
     ) {
         return userFeignClient.update(userId, saveUserRequestDTO);
     }
