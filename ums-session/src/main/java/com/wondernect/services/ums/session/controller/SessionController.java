@@ -19,6 +19,7 @@ import com.wondernect.stars.user.dto.auth.local.AuthUserLocalAuthRequestDTO;
 import com.wondernect.stars.user.dto.auth.local.UserLocalAuthResponseDTO;
 import com.wondernect.stars.user.feign.user.UserServerService;
 import com.wondernect.stars.user.feign.userLocalAuth.UserLocalAuthFeignClient;
+import com.wondernect.stars.user.feign.userLocalAuth.UserLocalAuthServerService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -58,7 +59,7 @@ public class SessionController {
     private UserServerService userServerService;
 
     @Autowired
-    private UserLocalAuthFeignClient userLocalAuthFeignClient;
+    private UserLocalAuthServerService userLocalAuthServerService;
 
     @ApiOperation(value = "登录", httpMethod = "POST")
     @PostMapping(value = "/login")
@@ -73,10 +74,7 @@ public class SessionController {
         if (!userResponseDTO.getEnable()) {
             throw new BusinessException("用户尚未激活,不可登录");
         }
-        BusinessData<UserLocalAuthResponseDTO> businessData = userLocalAuthFeignClient.auth(userResponseDTO.getId(), new AuthUserLocalAuthRequestDTO(loginRequestDTO.getPassword()));
-        if (!businessData.success()) {
-            throw new BusinessException(businessData);
-        }
+        userLocalAuthServerService.auth(userResponseDTO.getId(), new AuthUserLocalAuthRequestDTO(loginRequestDTO.getPassword()));
         wondernectCommonContext.getAuthorizeData().setUserId(userResponseDTO.getId());
         wondernectCommonContext.getAuthorizeData().setRole(userResponseDTO.getRoleId());
         CodeResponseDTO codeResponseDTO = codeSessionServerService.request(
