@@ -28,7 +28,6 @@
         <module>ums-rbac</module>
         <module>ums-file</module>
         <module>ums-session</module>
-        <module>remote-file</module>
     </modules>
 
     <dependencies>
