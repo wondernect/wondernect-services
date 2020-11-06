@@ -5,10 +5,7 @@ import com.wondernect.elements.authorize.context.interceptor.AuthorizeType;
 import com.wondernect.elements.authorize.context.interceptor.AuthorizeUserRole;
 import com.wondernect.elements.common.response.BusinessData;
 import com.wondernect.elements.rdb.response.PageResponseData;
-import com.wondernect.stars.file.dto.ListLocalFilePathRequestDTO;
-import com.wondernect.stars.file.dto.LocalFilePathResponseDTO;
-import com.wondernect.stars.file.dto.PageLocalFilePathRequestDTO;
-import com.wondernect.stars.file.dto.SaveLocalFilePathRequestDTO;
+import com.wondernect.stars.file.dto.*;
 import com.wondernect.stars.file.feign.path.LocalFilePathFeignClient;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -46,6 +43,23 @@ public class LocalFilePathController {
         return localFilePathFeignClient.create(saveLocalFilePathRequestDTO);
     }
 
+    @ApiOperation(value = "更新", httpMethod = "POST")
+    @PostMapping(value = "/{id}/update")
+    public BusinessData<LocalFilePathResponseDTO> update(
+            @ApiParam(required = true) @NotBlank(message = "请求参数不能为空") @PathVariable(value = "id", required = false) String id,
+            @ApiParam(required = true) @NotNull(message = "请求参数不能为空") @Validated @RequestBody(required = false) SaveLocalFilePathRequestDTO saveLocalFilePathRequestDTO
+    ) {
+        return localFilePathFeignClient.update(id, saveLocalFilePathRequestDTO);
+    }
+
+    @ApiOperation(value = "删除", httpMethod = "POST")
+    @PostMapping(value = "/{id}/delete")
+    public BusinessData delete(
+            @ApiParam(required = true) @NotBlank(message = "请求参数不能为空") @PathVariable(value = "id", required = false) String id
+    ) {
+        return localFilePathFeignClient.delete(id);
+    }
+
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
     @ApiOperation(value = "获取", httpMethod = "GET")
     @GetMapping(value = "/{id}/detail")
@@ -78,5 +92,14 @@ public class LocalFilePathController {
             @ApiParam(required = true) @NotNull(message = "请求参数不能为空") @Validated @RequestBody(required = false) PageLocalFilePathRequestDTO pageLocalFilePathRequestDTO
     ) {
         return localFilePathFeignClient.page(pageLocalFilePathRequestDTO);
+    }
+
+    @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
+    @ApiOperation(value = "树形结构", httpMethod = "GET")
+    @GetMapping(value = "/{root_file_path_id}/tree")
+    public BusinessData<LocalFilePathTreeResponseDTO> tree(
+            @ApiParam(required = true) @NotBlank(message = "根节点文件路径不能为空") @PathVariable(value = "root_file_path_id", required = false) String rootFilePathId
+    ) {
+        return localFilePathFeignClient.tree(rootFilePathId);
     }
 }
