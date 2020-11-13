@@ -28,6 +28,7 @@
         <module>ums-rbac</module>
         <module>ums-file</module>
         <module>ums-session</module>
+        <module>ums-database</module>
     </modules>
 
     <dependencies>
