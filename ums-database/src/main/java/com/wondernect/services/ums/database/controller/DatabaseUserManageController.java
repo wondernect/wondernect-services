@@ -92,18 +92,6 @@ public class DatabaseUserManageController {
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
-    @ApiOperation(value = "excel导出", httpMethod = "POST")
-    @PostMapping(value = "/excel_data_export")
-    public void excelDataExport(
-            @ApiParam(required = true) @NotBlank(message = "excel导出服务id不能为空") @RequestParam(value = "export_service_identifier", required = false) String exportServiceIdentifier,
-            @ApiParam(required = true) @NotNull(message = "列表请求参数不能为空") @Validated @RequestBody(required = false) ListDatabaseUserManageRequestDTO listDatabaseUserManageRequestDTO,
-            HttpServletRequest request,
-            HttpServletResponse response
-    ) {
-        databaseUserManageFeignClient.excelDataExport(exportServiceIdentifier, listDatabaseUserManageRequestDTO, request, response);
-    }
-
-    @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
     @ApiOperation(value = "赋权限", httpMethod = "POST")
     @PostMapping(value = "/{type}/give_rights")
     public BusinessData<DatabaseUserManageResponseDTO> giveRights(
