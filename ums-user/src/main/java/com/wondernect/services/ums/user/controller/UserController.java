@@ -14,10 +14,11 @@ import com.wondernect.stars.user.feign.user.UserFeignClient;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -35,6 +36,8 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "/v1/ums/user")
 public class UserController {
+
+    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
     @Autowired
     private UserConfigProperties userConfigProperties;
@@ -132,43 +135,5 @@ public class UserController {
             @ApiParam(required = true) @NotNull(message = "分页请求参数不能为空") @Validated @RequestBody PageUserRequestDTO pageUserRequestDTO
     ) {
         return userFeignClient.page(pageUserRequestDTO);
-    }
-
-    @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
-    @ApiOperation(value = "初始化本地用户导入导出item", httpMethod = "POST")
-    @PostMapping(value = "/init_local_user_item")
-    public BusinessData initLocalUserExcelItem(
-            @ApiParam(required = false) @RequestParam(value = "force_update", required = false) Boolean forceUpdate
-    ) {
-        return userFeignClient.initLocalUserExcelItem(forceUpdate);
-    }
-
-    @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
-    @ApiOperation(value = "本地用户导出", httpMethod = "POST")
-    @PostMapping(value = "/excel_data_export")
-    public void excelDataExport(
-            @ApiParam(required = true) @NotBlank(message = "模板id不能为空") @RequestParam(value = "template_id", required = false) String templateId,
-            @ApiParam(required = true) @NotNull(message = "列表请求参数不能为空") @Validated @RequestBody(required = false) ListUserRequestDTO listUserRequestDTO
-    ) {
-        userFeignClient.excelDataExport(templateId, listUserRequestDTO);
-    }
-
-    @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
-    @ApiOperation(value = "本地用户导入", httpMethod = "POST")
-    @PostMapping(value = "/excel_data_import")
-    public void excelDataImport(
-            @ApiParam(required = true) @NotBlank(message = "模板id不能为空") @RequestParam(value = "template_id", required = false) String templateId,
-            @ApiParam(required = true) @NotNull(message = "文件不能为空") @Validated @RequestPart(value = "file", required = false) MultipartFile file
-    ) {
-        userFeignClient.excelDataImport(templateId, file);
-    }
-
-    @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
-    @ApiOperation(value = "本地用户导入模板下载", httpMethod = "GET")
-    @GetMapping(value = "/excel_data_import_model")
-    public void excelDataImportModel(
-            @ApiParam(required = true) @NotBlank(message = "模板id不能为空") @RequestParam(value = "template_id", required = false) String templateId
-    ) {
-        userFeignClient.excelDataImportModel(templateId);
     }
 }
