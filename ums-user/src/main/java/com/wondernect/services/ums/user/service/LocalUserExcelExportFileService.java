@@ -1,5 +1,6 @@
 package com.wondernect.services.ums.user.service;
 
+import com.wondernect.elements.common.error.BusinessError;
 import com.wondernect.elements.common.exception.BusinessException;
 import com.wondernect.elements.common.response.BusinessData;
 import com.wondernect.elements.common.utils.ESDateTimeUtils;
@@ -90,6 +91,9 @@ public class LocalUserExcelExportFileService extends ESExcelExportFileService {
                 excelTemplateResponseDTO.getName(),
                 fileName
         );
+        if (ESObjectUtils.isNull(multipartFile)) {
+            return new BusinessData<>(BusinessError.SUCCESS);
+        }
         return localFileFeignClient.upload(FileType.FILE.name(), localFilePathResponseDTO.getId(), multipartFile);
     }
 
@@ -122,6 +126,9 @@ public class LocalUserExcelExportFileService extends ESExcelExportFileService {
                 excelTemplateResponseDTO.getName(),
                 fileName
         );
+        if (ESObjectUtils.isNull(multipartFile)) {
+            return new BusinessData<>(BusinessError.SUCCESS);
+        }
         return localFileFeignClient.upload(FileType.FILE.name(), localFilePathResponseDTO.getId(), multipartFile);
     }
 
