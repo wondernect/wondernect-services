@@ -40,6 +40,12 @@
             <artifactId>rbac-server-sdk</artifactId>
         </dependency>
 
+        <!-- stars file-server-sdk -->
+        <dependency>
+            <groupId>com.wondernect.stars</groupId>
+            <artifactId>file-server-sdk</artifactId>
+        </dependency>
+
         <!-- elements easyoffice -->
         <dependency>
             <groupId>com.wondernect.elements</groupId>

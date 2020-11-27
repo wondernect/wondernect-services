@@ -4,11 +4,11 @@ import com.wondernect.elements.authorize.context.interceptor.AuthorizeRoleType;
 import com.wondernect.elements.authorize.context.interceptor.AuthorizeType;
 import com.wondernect.elements.authorize.context.interceptor.AuthorizeUserRole;
 import com.wondernect.elements.common.error.BusinessError;
+import com.wondernect.elements.common.exception.BusinessException;
 import com.wondernect.elements.common.response.BusinessData;
 import com.wondernect.elements.common.utils.ESObjectUtils;
-import com.wondernect.services.ums.user.service.LocalUserExcelExportService;
-import com.wondernect.services.ums.user.service.LocalUserExcelImportService;
-import com.wondernect.services.ums.user.service.LocalUserExcelInitService;
+import com.wondernect.services.ums.user.service.*;
+import com.wondernect.stars.file.dto.FileResponseDTO;
 import com.wondernect.stars.user.dto.ListUserRequestDTO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -45,74 +45,117 @@ public class LocalUserExcelController {
     private LocalUserExcelInitService localUserExcelInitService;
 
     @Autowired
-    private LocalUserExcelExportService localUserExcelExportService;
+    private LocalUserExcelExportResponseService localUserExcelExportResponseService;
 
     @Autowired
-    private LocalUserExcelImportService localUserExcelImportService;
+    private LocalUserExcelImportResponseService localUserExcelImportResponseService;
+
+    @Autowired
+    private LocalUserExcelExportFileService localUserExcelExportFileService;
+
+    @Autowired
+    private LocalUserExcelImportFileService localUserExcelImportFileService;
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
     @ApiOperation(value = "初始化本地用户导入导出item", httpMethod = "POST")
-    @PostMapping(value = "/init_local_user_item")
-    public BusinessData initLocalUserExcelItem(
+    @PostMapping(value = "/local_user/init_excel_item")
+    public BusinessData initExcelItem(
             @ApiParam(required = false) @RequestParam(value = "force_update", required = false) Boolean forceUpdate
     ) {
         if (ESObjectUtils.isNull(forceUpdate)) {
             forceUpdate = false;
         }
-        localUserExcelInitService.initLocalUserExcelItem(forceUpdate);
+        localUserExcelInitService.initExcelItem(forceUpdate);
         return new BusinessData(BusinessError.SUCCESS);
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
-    @ApiOperation(value = "本地用户导出", httpMethod = "POST")
-    @PostMapping(value = "/local_user_data_export")
-    public void excelDataExport(
+    @ApiOperation(value = "本地用户导出(请求响应)", httpMethod = "POST")
+    @PostMapping(value = "/local_user/export_data_response")
+    public void exportDataResponse(
             @ApiParam(required = true) @NotBlank(message = "模板id不能为空") @RequestParam(value = "template_id", required = false) String templateId,
             @ApiParam(required = true) @NotNull(message = "列表请求参数不能为空") @Validated @RequestBody(required = false) ListUserRequestDTO listUserRequestDTO,
             HttpServletRequest request,
             HttpServletResponse response
     ) {
         try {
-            localUserExcelExportService.excelDataExport(templateId, listUserRequestDTO, request, response);
+            localUserExcelExportResponseService.exportDataResponse(templateId, listUserRequestDTO, request, response);
         } catch (Exception e) {
             BusinessData.error(e.getMessage(), response);
         }
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
-    @ApiOperation(value = "本地用户导入", httpMethod = "POST")
-    @PostMapping(value = "/local_user_data_import", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public void excelDataImport(
+    @ApiOperation(value = "本地用户导入(请求响应)", httpMethod = "POST")
+    @PostMapping(value = "/local_user/import_data_response", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public void importDataResponse(
             @ApiParam(required = true) @NotBlank(message = "模板id不能为空") @RequestParam(value = "template_id", required = false) String templateId,
             @ApiParam(required = true) @NotNull(message = "导入文件不能为空") @RequestPart(value = "file", required = false) MultipartFile file,
             HttpServletRequest request,
             HttpServletResponse response
     ) {
         try {
-            localUserExcelImportService.excelDataImport(templateId, file.getInputStream(), request, response);
+            localUserExcelImportResponseService.importDataResponse(templateId, file.getInputStream(), request, response);
         } catch (Exception e) {
             BusinessData.error(e.getMessage(), response);
         }
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
-    @ApiOperation(value = "本地用户导入模板下载", httpMethod = "GET")
-    @GetMapping(value = "/local_user_data_import_model")
-    public void excelDataImportModel(
+    @ApiOperation(value = "本地用户导入模板下载(请求响应)", httpMethod = "GET")
+    @GetMapping(value = "/local_user/model_data_response")
+    public void modelDataResponse(
             @ApiParam(required = true) @NotBlank(message = "模板id不能为空") @RequestParam(value = "template_id", required = false) String templateId,
             HttpServletRequest request,
             HttpServletResponse response
     ) {
         try {
-            localUserExcelExportService.excelDataImportModel(templateId, request, response);
+            localUserExcelExportResponseService.modelDataResponse(templateId, request, response);
         } catch (Exception e) {
             BusinessData.error(e.getMessage(), response);
         }
     }
 
-    /**
-     * 导出文件(请求响应)
-     */
+    @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
+    @ApiOperation(value = "本地用户导出(文件)", httpMethod = "POST")
+    @PostMapping(value = "/local_user/export_data_file")
+    public BusinessData<FileResponseDTO> exportDataFile(
+            @ApiParam(required = true) @NotBlank(message = "模板id不能为空") @RequestParam(value = "template_id", required = false) String templateId,
+            @ApiParam(required = true) @NotNull(message = "列表请求参数不能为空") @Validated @RequestBody(required = false) ListUserRequestDTO listUserRequestDTO,
+            @ApiParam(required = false) @RequestParam(value = "path_id", required = false) String pathId
+    ) {
+        return localUserExcelExportFileService.exportDataFile(templateId, listUserRequestDTO, pathId);
+    }
+
+    @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
+    @ApiOperation(value = "本地用户导入(文件)", httpMethod = "POST")
+    @PostMapping(value = "/local_user/import_data_file", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public BusinessData<FileResponseDTO> importDataFile(
+            @ApiParam(required = true) @NotBlank(message = "模板id不能为空") @RequestParam(value = "template_id", required = false) String templateId,
+            @ApiParam(required = true) @NotNull(message = "导入文件不能为空") @RequestPart(value = "file", required = false) MultipartFile file,
+            @ApiParam(required = false) @RequestParam(value = "path_id", required = false) String pathId
+    ) {
+        try {
+            return localUserExcelImportFileService.importDataFile(templateId, file.getInputStream(), pathId);
+        } catch (Exception e) {
+            logger.error(e.getLocalizedMessage(), e);
+            throw new BusinessException(e.getLocalizedMessage());
+        }
+    }
+
+    @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
+    @ApiOperation(value = "本地用户导入模板下载(文件)", httpMethod = "GET")
+    @GetMapping(value = "/local_user/model_data_file")
+    public BusinessData<FileResponseDTO> excelDataImportModel(
+            @ApiParam(required = true) @NotBlank(message = "模板id不能为空") @RequestParam(value = "template_id", required = false) String templateId,
+            @ApiParam(required = false) @RequestParam(value = "path_id", required = false) String pathId
+    ) {
+        return localUserExcelExportFileService.modelDataFile(templateId, pathId);
+    }
+
+    // /**
+    //  * 导出文件(请求响应)
+    //  */
     // private void exportExcel(Response feignResponse, String fileName, HttpServletRequest request, HttpServletResponse response) {
     //     try {
     //         InputStream inputStream = feignResponse.body().asInputStream();

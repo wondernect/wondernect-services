@@ -37,7 +37,7 @@ public class LocalUserExcelInitService {
     @Autowired
     private ExcelBeanPropertyServerService excelBeanPropertyServerService;
 
-    public void initLocalUserExcelItem(boolean forceUpdate) {
+    public void initExcelItem(boolean forceUpdate) {
         List<ESExcelItem> excelItemList = ESExcelUtils.getAllEntityExcelItem(LocalUserExcelDTO.class);
         if (CollectionUtils.isNotEmpty(excelItemList)) {
             ESExcelItem excelItemOne = excelItemList.get(0);

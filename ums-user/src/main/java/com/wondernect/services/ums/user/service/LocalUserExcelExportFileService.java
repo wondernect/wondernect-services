@@ -1,15 +1,22 @@
 package com.wondernect.services.ums.user.service;
 
 import com.wondernect.elements.common.exception.BusinessException;
+import com.wondernect.elements.common.response.BusinessData;
+import com.wondernect.elements.common.utils.ESDateTimeUtils;
 import com.wondernect.elements.common.utils.ESObjectUtils;
 import com.wondernect.elements.common.utils.ESStringUtils;
 import com.wondernect.elements.easyoffice.excel.handler.ESExcelBooleanItemHandler;
 import com.wondernect.elements.easyoffice.excel.handler.ESExcelItemHandler;
 import com.wondernect.elements.easyoffice.excel.handler.ESExcelStringItemHandler;
 import com.wondernect.elements.easyoffice.excel.handler.ESExcelTimestampItemHandler;
-import com.wondernect.elements.easyoffice.excel.service.ESExcelExportResponseService;
+import com.wondernect.elements.easyoffice.excel.service.ESExcelExportFileService;
 import com.wondernect.services.ums.user.excel.LocalUserExcelDTO;
 import com.wondernect.services.ums.user.excel.LocalUserExcelGenderItemHandler;
+import com.wondernect.stars.file.dto.FileResponseDTO;
+import com.wondernect.stars.file.dto.LocalFilePathResponseDTO;
+import com.wondernect.stars.file.em.FileType;
+import com.wondernect.stars.file.feign.local.LocalFileFeignClient;
+import com.wondernect.stars.file.feign.path.LocalFilePathServerService;
 import com.wondernect.stars.office.excel.dto.param.ExcelTemplateParamResponseDTO;
 import com.wondernect.stars.office.excel.dto.param.ListExcelTemplateParamRequestDTO;
 import com.wondernect.stars.office.excel.dto.template.ExcelTemplateResponseDTO;
@@ -22,9 +29,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,9 +42,9 @@ import java.util.List;
  * Description:
  */
 @Service
-public class LocalUserExcelExportService extends ESExcelExportResponseService {
+public class LocalUserExcelExportFileService extends ESExcelExportFileService {
 
-    private static final Logger logger = LoggerFactory.getLogger(LocalUserExcelExportService.class);
+    private static final Logger logger = LoggerFactory.getLogger(LocalUserExcelExportFileService.class);
 
     @Autowired
     private ExcelTemplateServerService excelTemplateServerService;
@@ -49,20 +55,74 @@ public class LocalUserExcelExportService extends ESExcelExportResponseService {
     @Autowired
     private UserServerService userServerService;
 
-    public void excelDataExport(String templateId, ListUserRequestDTO listUserRequestDTO, HttpServletRequest request, HttpServletResponse response) {
+    @Autowired
+    private LocalFileFeignClient localFileFeignClient;
+
+    @Autowired
+    private LocalFilePathServerService localFilePathServerService;
+
+    public BusinessData<FileResponseDTO> exportDataFile(String templateId, ListUserRequestDTO listUserRequestDTO, String localFilePathId) {
         ExcelTemplateResponseDTO excelTemplateResponseDTO = excelTemplateServerService.detail(templateId);
         if (ESObjectUtils.isNull(excelTemplateResponseDTO)) {
             throw new BusinessException("模板信息不存在");
         }
-        super.excelDataExport(templateId, LocalUserExcelDTO.class, userServerService.list(listUserRequestDTO), excelTemplateResponseDTO.getName(), excelTemplateResponseDTO.getName(), excelTemplateResponseDTO.getName(), request, response);
+        LocalFilePathResponseDTO localFilePathResponseDTO;
+        if (ESStringUtils.isBlank(localFilePathId)) {
+            localFilePathResponseDTO = localFilePathServerService.root();
+            if (ESObjectUtils.isNull(localFilePathResponseDTO)) {
+                throw new BusinessException("当前应用没有根节点文件存储路径,请先创建");
+            }
+        } else {
+            localFilePathResponseDTO = localFilePathServerService.get(localFilePathId);
+            if (ESObjectUtils.isNull(localFilePathResponseDTO)) {
+                throw new BusinessException("文件存储路径不存在");
+            }
+        }
+        if (ESStringUtils.isBlank(localFilePathResponseDTO.getSubFilePath())) {
+            throw new BusinessException("文件存储路径为空");
+        }
+        String fileName = excelTemplateResponseDTO.getName() + ESDateTimeUtils.formatDate(ESDateTimeUtils.getCurrentTimestamp(), "-yyyy-MM-dd-HH-SS") + ".xlsx";
+        MultipartFile multipartFile = super.excelDataExport(
+                templateId,
+                LocalUserExcelDTO.class,
+                userServerService.list(listUserRequestDTO),
+                excelTemplateResponseDTO.getName(),
+                excelTemplateResponseDTO.getName(),
+                fileName
+        );
+        return localFileFeignClient.upload(FileType.FILE.name(), localFilePathResponseDTO.getId(), multipartFile);
     }
 
-    public void excelDataImportModel(String templateId, HttpServletRequest request, HttpServletResponse response) {
+    public BusinessData<FileResponseDTO> modelDataFile(String templateId, String localFilePathId) {
         ExcelTemplateResponseDTO excelTemplateResponseDTO = excelTemplateServerService.detail(templateId);
         if (ESObjectUtils.isNull(excelTemplateResponseDTO)) {
             throw new BusinessException("模板信息不存在");
         }
-        super.excelDataExport(templateId, LocalUserExcelDTO.class, new ArrayList<>(), excelTemplateResponseDTO.getName(), excelTemplateResponseDTO.getName(), excelTemplateResponseDTO.getName(), request, response);
+        LocalFilePathResponseDTO localFilePathResponseDTO;
+        if (ESStringUtils.isBlank(localFilePathId)) {
+            localFilePathResponseDTO = localFilePathServerService.root();
+            if (ESObjectUtils.isNull(localFilePathResponseDTO)) {
+                throw new BusinessException("当前应用没有根节点文件存储路径,请先创建");
+            }
+        } else {
+            localFilePathResponseDTO = localFilePathServerService.get(localFilePathId);
+            if (ESObjectUtils.isNull(localFilePathResponseDTO)) {
+                throw new BusinessException("文件存储路径不存在");
+            }
+        }
+        if (ESStringUtils.isBlank(localFilePathResponseDTO.getSubFilePath())) {
+            throw new BusinessException("文件存储路径为空");
+        }
+        String fileName = excelTemplateResponseDTO.getName() + ESDateTimeUtils.formatDate(ESDateTimeUtils.getCurrentTimestamp(), "-yyyy-MM-dd-HH-SS") + ".xlsx";
+        MultipartFile multipartFile = super.excelDataExport(
+                templateId,
+                LocalUserExcelDTO.class,
+                new ArrayList<>(),
+                excelTemplateResponseDTO.getName(),
+                excelTemplateResponseDTO.getName(),
+                fileName
+        );
+        return localFileFeignClient.upload(FileType.FILE.name(), localFilePathResponseDTO.getId(), multipartFile);
     }
 
     @Override

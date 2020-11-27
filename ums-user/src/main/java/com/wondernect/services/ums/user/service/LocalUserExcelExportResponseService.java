@@ -7,21 +7,15 @@ import com.wondernect.elements.easyoffice.excel.handler.ESExcelBooleanItemHandle
 import com.wondernect.elements.easyoffice.excel.handler.ESExcelItemHandler;
 import com.wondernect.elements.easyoffice.excel.handler.ESExcelStringItemHandler;
 import com.wondernect.elements.easyoffice.excel.handler.ESExcelTimestampItemHandler;
-import com.wondernect.elements.easyoffice.excel.model.ESExcelItem;
-import com.wondernect.elements.easyoffice.excel.service.ESExcelImportResponseService;
-import com.wondernect.elements.easyoffice.excel.util.ESExcelUtils;
+import com.wondernect.elements.easyoffice.excel.service.ESExcelExportResponseService;
 import com.wondernect.services.ums.user.excel.LocalUserExcelDTO;
 import com.wondernect.services.ums.user.excel.LocalUserExcelGenderItemHandler;
-import com.wondernect.services.ums.user.excel.LocalUserExcelImportDataHandler;
-import com.wondernect.services.ums.user.excel.LocalUserExcelImportVerifyHandler;
 import com.wondernect.stars.office.excel.dto.param.ExcelTemplateParamResponseDTO;
 import com.wondernect.stars.office.excel.dto.param.ListExcelTemplateParamRequestDTO;
 import com.wondernect.stars.office.excel.dto.template.ExcelTemplateResponseDTO;
 import com.wondernect.stars.office.feign.excel.param.ExcelTemplateParamServerService;
 import com.wondernect.stars.office.feign.excel.template.ExcelTemplateServerService;
-import com.wondernect.stars.user.dto.SaveLocalUserRequestDTO;
-import com.wondernect.stars.user.em.Gender;
-import com.wondernect.stars.user.em.UserType;
+import com.wondernect.stars.user.dto.ListUserRequestDTO;
 import com.wondernect.stars.user.feign.user.UserServerService;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
@@ -31,10 +25,8 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Copyright (C), 2020, wondernect.com
@@ -44,9 +36,9 @@ import java.util.Map;
  * Description:
  */
 @Service
-public class LocalUserExcelImportService extends ESExcelImportResponseService {
+public class LocalUserExcelExportResponseService extends ESExcelExportResponseService {
 
-    private static final Logger logger = LoggerFactory.getLogger(LocalUserExcelImportService.class);
+    private static final Logger logger = LoggerFactory.getLogger(LocalUserExcelExportResponseService.class);
 
     @Autowired
     private ExcelTemplateServerService excelTemplateServerService;
@@ -55,47 +47,22 @@ public class LocalUserExcelImportService extends ESExcelImportResponseService {
     private ExcelTemplateParamServerService excelTemplateParamServerService;
 
     @Autowired
-    private LocalUserExcelImportDataHandler userImportDataHandler;
-
-    @Autowired
-    private LocalUserExcelImportVerifyHandler userImportVerifyHandler;
-
-    @Autowired
     private UserServerService userServerService;
 
-    public void excelDataImport(String templateId, InputStream fileInputStream, HttpServletRequest request, HttpServletResponse response) {
+    public void exportDataResponse(String templateId, ListUserRequestDTO listUserRequestDTO, HttpServletRequest request, HttpServletResponse response) {
         ExcelTemplateResponseDTO excelTemplateResponseDTO = excelTemplateServerService.detail(templateId);
         if (ESObjectUtils.isNull(excelTemplateResponseDTO)) {
             throw new BusinessException("模板信息不存在");
         }
-        super.excelDataImport(templateId, LocalUserExcelDTO.class, userImportDataHandler, userImportVerifyHandler, 1, 1, fileInputStream, excelTemplateResponseDTO.getName() + "错误信息", request, response);
+        super.excelDataExport(templateId, LocalUserExcelDTO.class, userServerService.list(listUserRequestDTO), excelTemplateResponseDTO.getName(), excelTemplateResponseDTO.getName(), excelTemplateResponseDTO.getName(), request, response);
     }
 
-    @Override
-    public void saveExcelImportEntityData(Map<String, Object> map, List<ESExcelItem> excelItemList) {
-        LocalUserExcelDTO localUserExcelDTO = ESExcelUtils.getImportObject(LocalUserExcelDTO.class, map, excelItemList);
-        if (ESObjectUtils.isNotNull(localUserExcelDTO)) {
-            userServerService.create(
-                    new SaveLocalUserRequestDTO(
-                            null,
-                            UserType.LOCAL,
-                            localUserExcelDTO.getUsername(),
-                            localUserExcelDTO.getName(),
-                            ESObjectUtils.isNotNull(localUserExcelDTO.getGender()) ? localUserExcelDTO.getGender() : Gender.UNKNOWN,
-                            localUserExcelDTO.getAvatar(),
-                            localUserExcelDTO.getMobile(),
-                            localUserExcelDTO.getEmail(),
-                            localUserExcelDTO.getLocation(),
-                            localUserExcelDTO.getRemark(),
-                            localUserExcelDTO.getRoleTypeId(),
-                            localUserExcelDTO.getRoleId(),
-                            localUserExcelDTO.getPassword(),
-                            ESObjectUtils.isNotNull(localUserExcelDTO.getEnable()) ? localUserExcelDTO.getEnable() : true,
-                            ESObjectUtils.isNotNull(localUserExcelDTO.getEditable()) ? localUserExcelDTO.getEditable() : true,
-                            ESObjectUtils.isNotNull(localUserExcelDTO.getDeletable()) ? localUserExcelDTO.getDeletable() : true
-                    )
-            );
+    public void modelDataResponse(String templateId, HttpServletRequest request, HttpServletResponse response) {
+        ExcelTemplateResponseDTO excelTemplateResponseDTO = excelTemplateServerService.detail(templateId);
+        if (ESObjectUtils.isNull(excelTemplateResponseDTO)) {
+            throw new BusinessException("模板信息不存在");
         }
+        super.excelDataExport(templateId, LocalUserExcelDTO.class, new ArrayList<>(), excelTemplateResponseDTO.getName(), excelTemplateResponseDTO.getName(), excelTemplateResponseDTO.getName(), request, response);
     }
 
     @Override

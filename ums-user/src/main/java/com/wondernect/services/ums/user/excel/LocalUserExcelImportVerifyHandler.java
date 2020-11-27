@@ -41,11 +41,7 @@ public class LocalUserExcelImportVerifyHandler extends ESExcelImportVerifyHandle
     public BusinessData verifyData(Map<String, Object> object) {
 
         Object username = object.get("username");
-        if (ESObjectUtils.isNotNull(username)) {
-            if (ESObjectUtils.isNotNull(userServerService.detailByUsername(username.toString()))) {
-                return new BusinessData("用户登录名已存在");
-            }
-        } else {
+        if (ESObjectUtils.isNull(username)) {
             return new BusinessData("用户登录名不能为空");
         }
 
