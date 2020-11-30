@@ -6,6 +6,7 @@ import com.wondernect.elements.authorize.context.interceptor.AuthorizeUserRole;
 import com.wondernect.elements.common.error.BusinessError;
 import com.wondernect.elements.common.exception.BusinessException;
 import com.wondernect.elements.common.response.BusinessData;
+import com.wondernect.elements.common.utils.ESHttpUtils;
 import com.wondernect.elements.common.utils.ESObjectUtils;
 import com.wondernect.services.ums.user.service.*;
 import com.wondernect.stars.file.dto.FileResponseDTO;
@@ -36,7 +37,7 @@ import javax.validation.constraints.NotNull;
 @Api(tags = "本地用户导入&导出", description = "本地用户导入&导出")
 @Validated
 @RestController
-@RequestMapping(value = "/v1/ums/user")
+@RequestMapping(value = "/v1/ums/user/local_user")
 public class LocalUserExcelController {
 
     private static final Logger logger = LoggerFactory.getLogger(LocalUserExcelController.class);
@@ -58,7 +59,7 @@ public class LocalUserExcelController {
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
     @ApiOperation(value = "初始化本地用户导入导出item", httpMethod = "POST")
-    @PostMapping(value = "/local_user/init_excel_item")
+    @PostMapping(value = "/init_excel_item")
     public BusinessData initExcelItem(
             @ApiParam(required = false) @RequestParam(value = "force_update", required = false) Boolean forceUpdate
     ) {
@@ -71,8 +72,8 @@ public class LocalUserExcelController {
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
     @ApiOperation(value = "本地用户导出(请求响应)", httpMethod = "POST")
-    @PostMapping(value = "/local_user/export_data_response")
-    public void exportDataResponse(
+    @PostMapping(value = "/response/export_data")
+    public void exportResponseData(
             @ApiParam(required = true) @NotBlank(message = "模板id不能为空") @RequestParam(value = "template_id", required = false) String templateId,
             @ApiParam(required = true) @NotNull(message = "列表请求参数不能为空") @Validated @RequestBody(required = false) ListUserRequestDTO listUserRequestDTO,
             HttpServletRequest request,
@@ -87,8 +88,8 @@ public class LocalUserExcelController {
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
     @ApiOperation(value = "本地用户导入(请求响应)", httpMethod = "POST")
-    @PostMapping(value = "/local_user/import_data_response", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public void importDataResponse(
+    @PostMapping(value = "/response/import_data", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public void importResponseData(
             @ApiParam(required = true) @NotBlank(message = "模板id不能为空") @RequestParam(value = "template_id", required = false) String templateId,
             @ApiParam(required = true) @NotNull(message = "导入文件不能为空") @RequestPart(value = "file", required = false) MultipartFile file,
             HttpServletRequest request,
@@ -103,8 +104,8 @@ public class LocalUserExcelController {
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
     @ApiOperation(value = "本地用户导入模板下载(请求响应)", httpMethod = "GET")
-    @GetMapping(value = "/local_user/model_data_response")
-    public void modelDataResponse(
+    @GetMapping(value = "/response/model_data")
+    public void exportModelResponseData(
             @ApiParam(required = true) @NotBlank(message = "模板id不能为空") @RequestParam(value = "template_id", required = false) String templateId,
             HttpServletRequest request,
             HttpServletResponse response
@@ -118,8 +119,8 @@ public class LocalUserExcelController {
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
     @ApiOperation(value = "本地用户导出(文件)", httpMethod = "POST")
-    @PostMapping(value = "/local_user/export_data_file")
-    public BusinessData<FileResponseDTO> exportDataFile(
+    @PostMapping(value = "/file/export_data")
+    public BusinessData<FileResponseDTO> exportFileData(
             @ApiParam(required = true) @NotBlank(message = "模板id不能为空") @RequestParam(value = "template_id", required = false) String templateId,
             @ApiParam(required = true) @NotNull(message = "列表请求参数不能为空") @Validated @RequestBody(required = false) ListUserRequestDTO listUserRequestDTO,
             @ApiParam(required = false) @RequestParam(value = "path_id", required = false) String pathId
@@ -129,8 +130,8 @@ public class LocalUserExcelController {
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
     @ApiOperation(value = "本地用户导入(文件)", httpMethod = "POST")
-    @PostMapping(value = "/local_user/import_data_file", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public BusinessData<FileResponseDTO> importDataFile(
+    @PostMapping(value = "/file/import_file_data", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public BusinessData<FileResponseDTO> importFileData(
             @ApiParam(required = true) @NotBlank(message = "模板id不能为空") @RequestParam(value = "template_id", required = false) String templateId,
             @ApiParam(required = true) @NotNull(message = "导入文件不能为空") @RequestPart(value = "file", required = false) MultipartFile file,
             @ApiParam(required = false) @RequestParam(value = "path_id", required = false) String pathId
@@ -144,9 +145,20 @@ public class LocalUserExcelController {
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
+    @ApiOperation(value = "本地用户导入(url文件)", httpMethod = "POST")
+    @PostMapping(value = "/file/import_url_data", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public BusinessData<FileResponseDTO> importUrlFileData(
+            @ApiParam(required = true) @NotBlank(message = "模板id不能为空") @RequestParam(value = "template_id", required = false) String templateId,
+            @ApiParam(required = true) @NotBlank(message = "文件链接不能为空") @RequestParam(value = "file_url", required = false) String fileUrl,
+            @ApiParam(required = false) @RequestParam(value = "path_id", required = false) String pathId
+    ) {
+        return localUserExcelImportFileService.importDataFile(templateId, ESHttpUtils.getUrlConnectionInputStream(fileUrl), pathId);
+    }
+
+    @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
     @ApiOperation(value = "本地用户导入模板下载(文件)", httpMethod = "GET")
-    @GetMapping(value = "/local_user/model_data_file")
-    public BusinessData<FileResponseDTO> excelDataImportModel(
+    @GetMapping(value = "/file/model_data")
+    public BusinessData<FileResponseDTO> exportModelFileData(
             @ApiParam(required = true) @NotBlank(message = "模板id不能为空") @RequestParam(value = "template_id", required = false) String templateId,
             @ApiParam(required = false) @RequestParam(value = "path_id", required = false) String pathId
     ) {
