@@ -30,7 +30,7 @@ import java.util.List;
 @RequestMapping(value = "/v1/ums/database/database_root_manage")
 @RestController
 @Validated
-@Api(tags = "数据库管理接口")
+@Api(tags = "MySQL数据库管理接口")
 public class DatabaseRootManageController {
 
     @Autowired

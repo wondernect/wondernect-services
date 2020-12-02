@@ -27,7 +27,7 @@ import java.util.List;
 @RequestMapping(value = "/v1/ums/database/database_user_manage")
 @RestController
 @Validated
-@Api(tags = "数据库实例用户服务")
+@Api(tags = "数据库用户接口")
 public class DatabaseUserManageController {
 
     @Autowired

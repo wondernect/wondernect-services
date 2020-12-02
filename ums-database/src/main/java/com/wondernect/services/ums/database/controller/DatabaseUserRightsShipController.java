@@ -27,7 +27,7 @@ import java.util.List;
 @RequestMapping(value = "/v1/ums/database/database_user_rights_ship")
 @RestController
 @Validated
-@Api(tags = "数据库用户权限关系表接口")
+@Api(tags = "数据库用户权限关系接口")
 public class DatabaseUserRightsShipController {
 
     @Autowired
