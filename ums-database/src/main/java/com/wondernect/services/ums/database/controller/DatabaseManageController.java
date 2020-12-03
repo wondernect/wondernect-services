@@ -30,7 +30,7 @@ import java.util.List;
 @RequestMapping(value = "/v1/ums/database/database_manage")
 @RestController
 @Validated
-@Api(tags = "数据库接口")
+@Api(tags = "数据库名称接口")
 public class DatabaseManageController {
 
     @Autowired
@@ -99,5 +99,23 @@ public class DatabaseManageController {
             @ApiParam(required = true) @NotBlank(message = "请求参数不能为空") @RequestParam(value = "id", required = false) String id
     ) {
         return new BusinessData<>(databaseManageFeignClient.initDatabase(id));
+    }
+
+    @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
+    @ApiOperation(value = "查询用户已经有那些数据库的权限列表", httpMethod = "POST")
+    @PostMapping(value = "/user_has_rights_list")
+    public BusinessData<List<DatabaseManageResponseDTO>> userHasRightsList(
+            @ApiParam(required = true) @NotBlank(message = "请求参数不能为空") @RequestParam(value = "database_user_id", required = false) String databaseUserId
+    ) {
+        return new BusinessData<>(databaseManageFeignClient.userHasRightsList(databaseUserId));
+    }
+
+    @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
+    @ApiOperation(value = "查询用户没有那些数据库的权限列表", httpMethod = "POST")
+    @PostMapping(value = "/user_no_rights_list")
+    public BusinessData<List<DatabaseManageResponseDTO>> userNoRightsList(
+            @ApiParam(required = true) @NotBlank(message = "请求参数不能为空") @RequestParam(value = "database_user_id", required = false) String databaseUserId
+    ) {
+        return new BusinessData<>(databaseManageFeignClient.userNoRightsList(databaseUserId));
     }
 }
