@@ -79,6 +79,16 @@ public class ExcelTemplateParamController {
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
+    @ApiOperation(value = "获取详细信息", httpMethod = "GET")
+    @GetMapping(value = "/{id}/detail_by_template_id_and_name")
+    public BusinessData<ExcelTemplateParamResponseDTO> detailByTemplateIdAndName(
+            @ApiParam(required = true) @NotBlank(message = "模板id不能为空") @RequestParam(value = "template_id", required = false) String templateId,
+            @ApiParam(required = true) @NotBlank(message = "属性名不能为空") @RequestParam(value = "name", required = false) String name
+    ) {
+        return excelTemplateParamFeignClient.detailByTemplateIdAndName(templateId, name);
+    }
+
+    @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
     @ApiOperation(value = "列表", httpMethod = "POST")
     @PostMapping(value = "/list")
     public BusinessData<List<ExcelTemplateParamResponseDTO>> list(
