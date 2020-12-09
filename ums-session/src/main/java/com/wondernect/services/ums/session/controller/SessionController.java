@@ -9,6 +9,7 @@ import com.wondernect.elements.common.error.BusinessError;
 import com.wondernect.elements.common.exception.BusinessException;
 import com.wondernect.elements.common.response.BusinessData;
 import com.wondernect.elements.common.utils.*;
+import com.wondernect.elements.logger.RequestLogger;
 import com.wondernect.services.ums.session.dto.LoginRequestDTO;
 import com.wondernect.services.ums.session.dto.LoginResponseDTO;
 import com.wondernect.stars.session.dto.code.CodeRequestDTO;
@@ -61,6 +62,7 @@ public class SessionController {
     @Autowired
     private UserLocalAuthServerService userLocalAuthServerService;
 
+    @RequestLogger(level = "INFO", service = "ums-session", module = "session", operation = "login", description = "登录")
     @ApiOperation(value = "登录", httpMethod = "POST")
     @PostMapping(value = "/login")
     public BusinessData<LoginResponseDTO> login(
@@ -90,6 +92,7 @@ public class SessionController {
         return new BusinessData<>(new LoginResponseDTO(userResponseDTO, codeResponseDTO));
     }
 
+    @RequestLogger(level = "INFO", service = "ums-session", module = "session", operation = "logout", description = "登出")
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
     @ApiOperation(value = "登出", httpMethod = "POST")
     @PostMapping(value = "/logout")

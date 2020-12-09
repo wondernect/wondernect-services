@@ -4,6 +4,7 @@ import com.wondernect.elements.authorize.context.interceptor.AuthorizeRoleType;
 import com.wondernect.elements.authorize.context.interceptor.AuthorizeType;
 import com.wondernect.elements.authorize.context.interceptor.AuthorizeUserRole;
 import com.wondernect.elements.common.response.BusinessData;
+import com.wondernect.elements.logger.RequestLogger;
 import com.wondernect.elements.rdb.response.PageResponseData;
 import com.wondernect.stars.session.dto.code.*;
 import com.wondernect.stars.session.feign.codeSession.CodeSessionFeignClient;
@@ -62,6 +63,7 @@ public class CodeSessionController {
     // }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
+    @RequestLogger(level = "INFO", service = "ums-session", module = "code-session", operation = "deleteCache", description = "删除(缓存)")
     @ApiOperation(value = "删除(缓存)", httpMethod = "POST")
     @PostMapping(value = "/{code}/cache_delete")
     public BusinessData deleteCache(
@@ -89,6 +91,7 @@ public class CodeSessionController {
     // }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
+    @RequestLogger(level = "INFO", service = "ums-session", module = "code-session", operation = "authCache", description = "验证(缓存)")
     @ApiOperation(value = "验证(缓存)", httpMethod = "POST")
     @PostMapping(value = "/cache_auth")
     public BusinessData<CodeResponseDTO> authCache(
@@ -107,6 +110,7 @@ public class CodeSessionController {
     // }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
+    @RequestLogger(level = "INFO", service = "ums-session", module = "code-session", operation = "page", description = "分页(数据库)")
     @ApiOperation(value = "分页(数据库)", httpMethod = "POST")
     @PostMapping(value = "/page")
     public BusinessData<PageResponseData<CodeResponseDTO>> page(
