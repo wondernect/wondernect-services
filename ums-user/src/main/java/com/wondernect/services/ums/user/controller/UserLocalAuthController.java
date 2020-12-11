@@ -4,6 +4,7 @@ import com.wondernect.elements.authorize.context.interceptor.AuthorizeRoleType;
 import com.wondernect.elements.authorize.context.interceptor.AuthorizeType;
 import com.wondernect.elements.authorize.context.interceptor.AuthorizeUserRole;
 import com.wondernect.elements.common.response.BusinessData;
+import com.wondernect.elements.logger.RequestLogger;
 import com.wondernect.stars.user.dto.auth.local.AuthUserLocalAuthRequestDTO;
 import com.wondernect.stars.user.dto.auth.local.SaveUserLocalAuthRequestDTO;
 import com.wondernect.stars.user.dto.auth.local.UserLocalAuthResponseDTO;
@@ -35,6 +36,7 @@ public class UserLocalAuthController {
     private UserLocalAuthFeignClient userLocalAuthFeignClient;
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
+    @RequestLogger(module = "local_auth", operation = "create", description = "创建")
     @ApiOperation(value = "创建", httpMethod = "POST")
     @PostMapping(value = "/{id}/create")
     public BusinessData<UserLocalAuthResponseDTO> create(
@@ -45,6 +47,7 @@ public class UserLocalAuthController {
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
+    @RequestLogger(module = "local_auth", operation = "update", description = "更新")
     @ApiOperation(value = "更新", httpMethod = "POST")
     @PostMapping(value = "/{id}/update")
     public BusinessData<UserLocalAuthResponseDTO> update(
@@ -55,6 +58,7 @@ public class UserLocalAuthController {
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
+    @RequestLogger(module = "local_auth", operation = "delete", description = "删除")
     @ApiOperation(value = "删除", httpMethod = "POST")
     @PostMapping(value = "/{id}/delete")
     public BusinessData delete(
@@ -64,6 +68,7 @@ public class UserLocalAuthController {
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
+    @RequestLogger(module = "local_auth", operation = "detail", description = "获取详情")
     @ApiOperation(value = "获取详情", httpMethod = "GET")
     @GetMapping(value = "/{id}/detail")
     public BusinessData<UserLocalAuthResponseDTO> detail(
@@ -73,6 +78,7 @@ public class UserLocalAuthController {
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
+    @RequestLogger(module = "local_auth", operation = "auth", description = "认证")
     @ApiOperation(value = "认证", httpMethod = "POST")
     @PostMapping(value = "/{id}/auth")
     public BusinessData<UserLocalAuthResponseDTO> auth(

@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.util.List;
 
 /**
  * Copyright (C), 2017-2019, wondernect.com
@@ -63,7 +62,7 @@ public class CodeSessionController {
     // }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
-    @RequestLogger(level = "INFO", service = "ums-session", module = "code-session", operation = "deleteCache", description = "删除(缓存)")
+    @RequestLogger(module = "code-session", operation = "deleteCache", description = "删除(缓存)")
     @ApiOperation(value = "删除(缓存)", httpMethod = "POST")
     @PostMapping(value = "/{code}/cache_delete")
     public BusinessData deleteCache(
@@ -91,7 +90,7 @@ public class CodeSessionController {
     // }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
-    @RequestLogger(level = "INFO", service = "ums-session", module = "code-session", operation = "authCache", description = "验证(缓存)")
+    @RequestLogger(module = "code-session", operation = "authCache", description = "验证(缓存)")
     @ApiOperation(value = "验证(缓存)", httpMethod = "POST")
     @PostMapping(value = "/cache_auth")
     public BusinessData<CodeResponseDTO> authCache(
@@ -110,7 +109,7 @@ public class CodeSessionController {
     // }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
-    @RequestLogger(level = "INFO", service = "ums-session", module = "code-session", operation = "page", description = "分页(数据库)")
+    @RequestLogger(module = "code-session", operation = "page", description = "分页(数据库)")
     @ApiOperation(value = "分页(数据库)", httpMethod = "POST")
     @PostMapping(value = "/page")
     public BusinessData<PageResponseData<CodeResponseDTO>> page(

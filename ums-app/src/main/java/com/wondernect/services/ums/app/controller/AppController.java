@@ -6,6 +6,7 @@ import com.wondernect.elements.authorize.context.interceptor.AuthorizeType;
 import com.wondernect.elements.authorize.context.interceptor.AuthorizeUserRole;
 import com.wondernect.elements.common.response.BusinessData;
 import com.wondernect.elements.common.utils.ESStringUtils;
+import com.wondernect.elements.logger.RequestLogger;
 import com.wondernect.elements.rdb.response.PageResponseData;
 import com.wondernect.stars.app.dto.*;
 import com.wondernect.stars.app.feign.app.AppFeignClient;
@@ -38,6 +39,7 @@ public class AppController {
     private WondernectCommonContext wondernectCommonContext;
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
+    @RequestLogger(module = "app", operation = "create", description = "创建")
     @ApiOperation(value = "创建", httpMethod = "POST")
     @PostMapping(value = "/create")
     public BusinessData<AppResponseDTO> create(
@@ -47,6 +49,7 @@ public class AppController {
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
+    @RequestLogger(module = "app", operation = "update", description = "更新")
     @ApiOperation(value = "更新", httpMethod = "POST")
     @PostMapping(value = "/{id}/update")
     public BusinessData<AppResponseDTO> update(
@@ -57,6 +60,7 @@ public class AppController {
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
+    @RequestLogger(module = "app", operation = "delete", description = "删除")
     @ApiOperation(value = "删除", httpMethod = "POST")
     @PostMapping(value = "/{id}/delete")
     public BusinessData delete(
@@ -66,6 +70,7 @@ public class AppController {
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
+    @RequestLogger(module = "app", operation = "detail", description = "获取详细信息")
     @ApiOperation(value = "获取详细信息", httpMethod = "GET")
     @GetMapping(value = "/{id}/detail")
     public BusinessData<AppResponseDTO> detail(
@@ -75,6 +80,7 @@ public class AppController {
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
+    @RequestLogger(module = "app", operation = "list", description = "列表")
     @ApiOperation(value = "列表", httpMethod = "POST")
     @PostMapping(value = "/list")
     public BusinessData<List<AppResponseDTO>> list(
@@ -87,6 +93,7 @@ public class AppController {
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
+    @RequestLogger(module = "app", operation = "page", description = "分页")
     @ApiOperation(value = "分页", httpMethod = "POST")
     @PostMapping(value = "/page")
     public BusinessData<PageResponseData<AppResponseDTO>> page(

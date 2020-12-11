@@ -51,6 +51,12 @@
             <groupId>com.wondernect.elements</groupId>
             <artifactId>easyoffice</artifactId>
         </dependency>
+
+        <!-- log-context -->
+        <dependency>
+            <groupId>com.wondernect.elements</groupId>
+            <artifactId>log-context</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

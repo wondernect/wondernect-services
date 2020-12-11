@@ -4,6 +4,7 @@ import com.wondernect.elements.authorize.context.interceptor.AuthorizeRoleType;
 import com.wondernect.elements.authorize.context.interceptor.AuthorizeType;
 import com.wondernect.elements.authorize.context.interceptor.AuthorizeUserRole;
 import com.wondernect.elements.common.response.BusinessData;
+import com.wondernect.elements.logger.RequestLogger;
 import com.wondernect.stars.user.dto.auth.third.AuthUserThirdAuthRequestDTO;
 import com.wondernect.stars.user.dto.auth.third.SaveUserThirdAuthRequestDTO;
 import com.wondernect.stars.user.dto.auth.third.UserThirdAuthResponseDTO;
@@ -36,6 +37,7 @@ public class UserThirdAuthController {
     private UserThirdAuthFeignClient userThirdAuthFeignClient;
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
+    @RequestLogger(module = "third_auth", operation = "create", description = "创建")
     @ApiOperation(value = "创建", httpMethod = "POST")
     @PostMapping(value = "/{id}/create")
     public BusinessData<UserThirdAuthResponseDTO> create(
@@ -46,6 +48,7 @@ public class UserThirdAuthController {
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
+    @RequestLogger(module = "third_auth", operation = "update", description = "更新")
     @ApiOperation(value = "更新", httpMethod = "POST")
     @PostMapping(value = "/{id}/update")
     public BusinessData<UserThirdAuthResponseDTO> update(
@@ -56,6 +59,7 @@ public class UserThirdAuthController {
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
+    @RequestLogger(module = "third_auth", operation = "delete", description = "删除")
     @ApiOperation(value = "删除", httpMethod = "POST")
     @PostMapping(value = "/{id}/delete")
     public BusinessData delete(
@@ -66,6 +70,7 @@ public class UserThirdAuthController {
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
+    @RequestLogger(module = "third_auth", operation = "detail", description = "获取详情")
     @ApiOperation(value = "获取详情", httpMethod = "GET")
     @GetMapping(value = "/{id}/detail")
     public BusinessData<UserThirdAuthResponseDTO> detail(
@@ -76,6 +81,7 @@ public class UserThirdAuthController {
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
+    @RequestLogger(module = "third_auth", operation = "detailByAppTypeAndAppUserId", description = "获取详情")
     @ApiOperation(value = "获取详情", httpMethod = "GET")
     @GetMapping(value = "/detail")
     public BusinessData<UserThirdAuthResponseDTO> detailByAppTypeAndAppUserId(
@@ -86,6 +92,7 @@ public class UserThirdAuthController {
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
+    @RequestLogger(module = "third_auth", operation = "auth", description = "认证")
     @ApiOperation(value = "认证", httpMethod = "POST")
     @PostMapping(value = "/auth")
     public BusinessData<UserThirdAuthResponseDTO> auth(

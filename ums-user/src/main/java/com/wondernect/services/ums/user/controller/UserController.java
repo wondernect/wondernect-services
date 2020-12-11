@@ -4,6 +4,7 @@ import com.wondernect.elements.authorize.context.interceptor.AuthorizeRoleType;
 import com.wondernect.elements.authorize.context.interceptor.AuthorizeType;
 import com.wondernect.elements.authorize.context.interceptor.AuthorizeUserRole;
 import com.wondernect.elements.common.response.BusinessData;
+import com.wondernect.elements.logger.RequestLogger;
 import com.wondernect.elements.rdb.response.PageResponseData;
 import com.wondernect.services.ums.user.config.UserConfigProperties;
 import com.wondernect.stars.user.dto.ListUserRequestDTO;
@@ -46,6 +47,7 @@ public class UserController {
     private UserFeignClient userFeignClient;
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
+    @RequestLogger(module = "user", operation = "enable", description = "激活")
     @ApiOperation(value = "激活", httpMethod = "POST")
     @PostMapping(value = "/{id}/enable")
     public BusinessData enable(
@@ -55,6 +57,7 @@ public class UserController {
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
+    @RequestLogger(module = "user", operation = "disable", description = "禁用")
     @ApiOperation(value = "禁用", httpMethod = "POST")
     @PostMapping(value = "/{id}/disable")
     public BusinessData disable(
@@ -63,6 +66,7 @@ public class UserController {
         return userFeignClient.disable(userId);
     }
 
+    @RequestLogger(module = "user", operation = "regist", description = "自主注册")
     @ApiOperation(value = "自主注册", httpMethod = "POST")
     @PostMapping(value = "/regist")
     public BusinessData<UserResponseDTO> regist(
@@ -74,6 +78,7 @@ public class UserController {
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
+    @RequestLogger(module = "user", operation = "create", description = "创建")
     @ApiOperation(value = "创建", httpMethod = "POST")
     @PostMapping(value = "/create")
     public BusinessData<UserResponseDTO> create(
@@ -83,6 +88,7 @@ public class UserController {
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
+    @RequestLogger(module = "user", operation = "update", description = "更新")
     @ApiOperation(value = "更新", httpMethod = "POST")
     @PostMapping(value = "/{id}/update")
     public BusinessData<UserResponseDTO> update(
@@ -93,6 +99,7 @@ public class UserController {
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
+    @RequestLogger(module = "user", operation = "delete", description = "删除")
     @ApiOperation(value = "删除", httpMethod = "POST")
     @PostMapping(value = "/{id}/delete")
     public BusinessData delete(
@@ -102,6 +109,7 @@ public class UserController {
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
+    @RequestLogger(module = "user", operation = "detail", description = "获取详情")
     @ApiOperation(value = "获取详情", httpMethod = "GET")
     @GetMapping(value = "/{id}/detail")
     public BusinessData<UserResponseDTO> detail(
@@ -111,6 +119,7 @@ public class UserController {
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
+    @RequestLogger(module = "user", operation = "detailByUsername", description = "获取详情")
     @ApiOperation(value = "获取详情", httpMethod = "GET")
     @GetMapping(value = "/detail")
     public BusinessData<UserResponseDTO> detailByUsername(
@@ -120,6 +129,7 @@ public class UserController {
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
+    @RequestLogger(module = "user", operation = "list", description = "列表")
     @ApiOperation(value = "列表", httpMethod = "POST")
     @PostMapping(value = "/list")
     public BusinessData<List<UserResponseDTO>> list(
@@ -129,6 +139,7 @@ public class UserController {
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
+    @RequestLogger(module = "user", operation = "page", description = "分页")
     @ApiOperation(value = "分页", httpMethod = "POST")
     @PostMapping(value = "/page")
     public BusinessData<PageResponseData<UserResponseDTO>> page(

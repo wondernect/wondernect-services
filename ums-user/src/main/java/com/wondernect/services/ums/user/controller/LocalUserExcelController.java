@@ -8,6 +8,7 @@ import com.wondernect.elements.common.exception.BusinessException;
 import com.wondernect.elements.common.response.BusinessData;
 import com.wondernect.elements.common.utils.ESHttpUtils;
 import com.wondernect.elements.common.utils.ESObjectUtils;
+import com.wondernect.elements.logger.RequestLogger;
 import com.wondernect.services.ums.user.service.*;
 import com.wondernect.stars.file.dto.FileResponseDTO;
 import com.wondernect.stars.user.dto.ListUserRequestDTO;
@@ -58,6 +59,7 @@ public class LocalUserExcelController {
     private LocalUserExcelImportFileService localUserExcelImportFileService;
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
+    @RequestLogger(module = "local_user_excel", operation = "initExcelItem", description = "初始化本地用户导入导出item")
     @ApiOperation(value = "初始化本地用户导入导出item", httpMethod = "POST")
     @PostMapping(value = "/init_excel_item")
     public BusinessData initExcelItem(
@@ -71,6 +73,7 @@ public class LocalUserExcelController {
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
+    @RequestLogger(module = "local_user_excel", operation = "exportResponseData", description = "本地用户导出(请求响应)")
     @ApiOperation(value = "本地用户导出(请求响应)", httpMethod = "POST")
     @PostMapping(value = "/response/export_data")
     public void exportResponseData(
@@ -87,6 +90,7 @@ public class LocalUserExcelController {
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
+    @RequestLogger(module = "local_user_excel", operation = "importResponseData", description = "本地用户导入(请求响应)")
     @ApiOperation(value = "本地用户导入(请求响应)", httpMethod = "POST")
     @PostMapping(value = "/response/import_data", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public void importResponseData(
@@ -103,6 +107,7 @@ public class LocalUserExcelController {
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
+    @RequestLogger(module = "local_user_excel", operation = "exportModelResponseData", description = "本地用户导入模板下载(请求响应)")
     @ApiOperation(value = "本地用户导入模板下载(请求响应)", httpMethod = "GET")
     @GetMapping(value = "/response/model_data")
     public void exportModelResponseData(
@@ -118,6 +123,7 @@ public class LocalUserExcelController {
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
+    @RequestLogger(module = "local_user_excel", operation = "exportFileData", description = "本地用户导出(文件)")
     @ApiOperation(value = "本地用户导出(文件)", httpMethod = "POST")
     @PostMapping(value = "/file/export_data")
     public BusinessData<FileResponseDTO> exportFileData(
@@ -129,6 +135,7 @@ public class LocalUserExcelController {
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
+    @RequestLogger(module = "local_user_excel", operation = "importFileData", description = "本地用户导入(文件)")
     @ApiOperation(value = "本地用户导入(文件)", httpMethod = "POST")
     @PostMapping(value = "/file/import_file_data", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public BusinessData<FileResponseDTO> importFileData(
@@ -145,6 +152,7 @@ public class LocalUserExcelController {
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
+    @RequestLogger(module = "local_user_excel", operation = "importUrlFileData", description = "本地用户导入(文件)")
     @ApiOperation(value = "本地用户导入(url文件)", httpMethod = "POST")
     @PostMapping(value = "/file/import_url_data", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public BusinessData<FileResponseDTO> importUrlFileData(
@@ -156,6 +164,7 @@ public class LocalUserExcelController {
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
+    @RequestLogger(module = "local_user_excel", operation = "exportModelFileData", description = "本地用户导入模板下载(文件)")
     @ApiOperation(value = "本地用户导入模板下载(文件)", httpMethod = "GET")
     @GetMapping(value = "/file/model_data")
     public BusinessData<FileResponseDTO> exportModelFileData(

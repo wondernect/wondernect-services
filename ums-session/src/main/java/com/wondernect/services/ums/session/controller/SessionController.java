@@ -62,7 +62,7 @@ public class SessionController {
     @Autowired
     private UserLocalAuthServerService userLocalAuthServerService;
 
-    @RequestLogger(level = "INFO", service = "ums-session", module = "session", operation = "login", description = "登录")
+    @RequestLogger(module = "session", operation = "login", description = "登录")
     @ApiOperation(value = "登录", httpMethod = "POST")
     @PostMapping(value = "/login")
     public BusinessData<LoginResponseDTO> login(
@@ -92,8 +92,8 @@ public class SessionController {
         return new BusinessData<>(new LoginResponseDTO(userResponseDTO, codeResponseDTO));
     }
 
-    @RequestLogger(level = "INFO", service = "ums-session", module = "session", operation = "logout", description = "登出")
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
+    @RequestLogger(module = "session", operation = "logout", description = "登出")
     @ApiOperation(value = "登出", httpMethod = "POST")
     @PostMapping(value = "/logout")
     public BusinessData logout() {
