@@ -4,6 +4,7 @@ import com.wondernect.elements.authorize.context.interceptor.AuthorizeRoleType;
 import com.wondernect.elements.authorize.context.interceptor.AuthorizeType;
 import com.wondernect.elements.authorize.context.interceptor.AuthorizeUserRole;
 import com.wondernect.elements.common.response.BusinessData;
+import com.wondernect.elements.logger.request.RequestLogger;
 import com.wondernect.elements.rdb.response.PageResponseData;
 import com.wondernect.stars.file.dto.FileResponseDTO;
 import com.wondernect.stars.file.dto.ListFileRequestDTO;
@@ -41,6 +42,7 @@ public class FastDFSFileController {
     private FastDFSFileFeignClient fastDFSFileFeignClient;
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
+    @RequestLogger(module = "fast_dfs", operation = "upload", description = "上传文件")
     @ApiOperation(value = "上传文件", httpMethod = "POST")
     @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public BusinessData<FileResponseDTO> upload(
@@ -51,6 +53,7 @@ public class FastDFSFileController {
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
+    @RequestLogger(module = "fast_dfs", operation = "wechatUpload", description = "上传文件(微信小程序)")
     @ApiOperation(value = "上传文件(微信小程序)", httpMethod = "POST")
     @PostMapping(value = "/wechat/upload")
     public BusinessData<FileResponseDTO> wechatUpload(
@@ -64,24 +67,27 @@ public class FastDFSFileController {
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
+    @RequestLogger(module = "fast_dfs", operation = "delete", description = "删除文件")
     @ApiOperation(value = "删除文件", httpMethod = "POST")
     @PostMapping(value = "/{id}/delete")
-    public BusinessData deleteById(
+    public BusinessData delete(
             @ApiParam(required = true) @NotBlank(message = "文件id不能为空") @PathVariable(value = "id", required = false) String id
     ) {
-        return fastDFSFileFeignClient.deleteById(id);
+        return fastDFSFileFeignClient.delete(id);
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
+    @RequestLogger(module = "fast_dfs", operation = "detail", description = "获取文件信息", recordResponse = false)
     @ApiOperation(value = "获取文件信息", httpMethod = "GET")
     @GetMapping(value = "/{id}/detail")
-    public BusinessData<FileResponseDTO> getById(
+    public BusinessData<FileResponseDTO> detail(
             @ApiParam(required = true) @NotBlank(message = "文件id不能为空") @PathVariable(value = "id", required = false) String id
     ) {
-        return fastDFSFileFeignClient.getById(id);
+        return fastDFSFileFeignClient.detail(id);
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
+    @RequestLogger(module = "fast_dfs", operation = "list", description = "列表", recordResponse = false)
     @ApiOperation(value = "列表", httpMethod = "POST")
     @PostMapping(value = "/list")
     public BusinessData<List<FileResponseDTO>> list(
@@ -91,6 +97,7 @@ public class FastDFSFileController {
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
+    @RequestLogger(module = "fast_dfs", operation = "page", description = "分页", recordResponse = false)
     @ApiOperation(value = "分页", httpMethod = "POST")
     @PostMapping(value = "/page")
     public BusinessData<PageResponseData<FileResponseDTO>> page(

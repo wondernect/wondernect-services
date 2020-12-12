@@ -4,6 +4,7 @@ import com.wondernect.elements.authorize.context.interceptor.AuthorizeRoleType;
 import com.wondernect.elements.authorize.context.interceptor.AuthorizeType;
 import com.wondernect.elements.authorize.context.interceptor.AuthorizeUserRole;
 import com.wondernect.elements.common.response.BusinessData;
+import com.wondernect.elements.logger.request.RequestLogger;
 import com.wondernect.elements.rdb.response.PageResponseData;
 import com.wondernect.stars.office.excel.dto.property.ExcelBeanPropertyResponseDTO;
 import com.wondernect.stars.office.excel.dto.property.ListExcelBeanPropertyRequestDTO;
@@ -36,6 +37,7 @@ public class ExcelBeanPropertyController {
     private ExcelBeanPropertyFeignClient excelBeanPropertyFeignClient;
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
+    @RequestLogger(module = "excel_bean_property", operation = "create", description = "创建")
     @ApiOperation(value = "创建", httpMethod = "POST")
     @PostMapping(value = "/create")
     public BusinessData<ExcelBeanPropertyResponseDTO> create(
@@ -45,6 +47,7 @@ public class ExcelBeanPropertyController {
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
+    @RequestLogger(module = "excel_bean_property", operation = "update", description = "更新")
     @ApiOperation(value = "更新", httpMethod = "POST")
     @PostMapping(value = "/{id}/update")
     public BusinessData<ExcelBeanPropertyResponseDTO> update(
@@ -55,6 +58,7 @@ public class ExcelBeanPropertyController {
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
+    @RequestLogger(module = "excel_bean_property", operation = "delete", description = "删除")
     @ApiOperation(value = "删除", httpMethod = "POST")
     @PostMapping(value = "/{id}/delete")
     public BusinessData delete(
@@ -64,6 +68,7 @@ public class ExcelBeanPropertyController {
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
+    @RequestLogger(module = "excel_bean_property", operation = "detail", description = "获取详细信息", recordResponse = false)
     @ApiOperation(value = "获取详细信息", httpMethod = "GET")
     @GetMapping(value = "/{id}/detail")
     public BusinessData<ExcelBeanPropertyResponseDTO> detail(
@@ -73,6 +78,7 @@ public class ExcelBeanPropertyController {
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
+    @RequestLogger(module = "excel_bean_property", operation = "detailByBeanIdAndName", description = "获取详细信息", recordResponse = false)
     @ApiOperation(value = "获取详细信息", httpMethod = "GET")
     @GetMapping(value = "/detail_by_bean_id_and_name")
     public BusinessData<ExcelBeanPropertyResponseDTO> detailByBeanIdAndName(
@@ -83,6 +89,7 @@ public class ExcelBeanPropertyController {
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
+    @RequestLogger(module = "excel_bean_property", operation = "list", description = "列表", recordResponse = false)
     @ApiOperation(value = "列表", httpMethod = "POST")
     @PostMapping(value = "/list")
     public BusinessData<List<ExcelBeanPropertyResponseDTO>> list(
@@ -92,6 +99,7 @@ public class ExcelBeanPropertyController {
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
+    @RequestLogger(module = "excel_bean_property", operation = "page", description = "分页", recordResponse = false)
     @ApiOperation(value = "分页", httpMethod = "POST")
     @PostMapping(value = "/page")
     public BusinessData<PageResponseData<ExcelBeanPropertyResponseDTO>> page(

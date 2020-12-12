@@ -82,7 +82,7 @@ public class LocalUserExcelImportVerifyHandler extends ESExcelImportVerifyHandle
 
         Object roleTypeId = object.get("role_type_id");
         if (ESObjectUtils.isNotNull(roleTypeId)) {
-            if (ESObjectUtils.isNull(roleTypeServerService.get(roleTypeId.toString()))) {
+            if (ESObjectUtils.isNull(roleTypeServerService.detail(roleTypeId.toString()))) {
                 return new BusinessData("角色类型id不存在");
             }
         } else {
@@ -91,7 +91,7 @@ public class LocalUserExcelImportVerifyHandler extends ESExcelImportVerifyHandle
 
         Object roleId = object.get("role_id");
         if (ESObjectUtils.isNotNull(roleId)) {
-            if (ESObjectUtils.isNull(roleServerService.get(roleId.toString()))) {
+            if (ESObjectUtils.isNull(roleServerService.detail(roleId.toString()))) {
                 return new BusinessData("角色id不存在");
             }
         } else {

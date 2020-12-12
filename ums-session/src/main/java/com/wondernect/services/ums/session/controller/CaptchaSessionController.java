@@ -4,7 +4,7 @@ import com.wondernect.elements.authorize.context.interceptor.AuthorizeRoleType;
 import com.wondernect.elements.authorize.context.interceptor.AuthorizeType;
 import com.wondernect.elements.authorize.context.interceptor.AuthorizeUserRole;
 import com.wondernect.elements.common.response.BusinessData;
-import com.wondernect.elements.logger.RequestLogger;
+import com.wondernect.elements.logger.request.RequestLogger;
 import com.wondernect.elements.rdb.response.PageResponseData;
 import com.wondernect.stars.session.dto.captcha.*;
 import com.wondernect.stars.session.feign.captchaSession.CaptchaSessionFeignClient;
@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.util.List;
 
 /**
  * Copyright (C), 2017-2019, wondernect.com
@@ -82,7 +81,7 @@ public class CaptchaSessionController {
     // }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
-    @RequestLogger(module = "captcha-session", operation = "authCache", description = "验证(缓存)")
+    @RequestLogger(module = "captcha-session", operation = "authCache", description = "验证(缓存)", recordResponse = false)
     @ApiOperation(value = "验证(缓存)", httpMethod = "POST")
     @PostMapping(value = "/cache_auth")
     public BusinessData<CaptchaResponseDTO> authCache(
@@ -101,7 +100,7 @@ public class CaptchaSessionController {
     // }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
-    @RequestLogger(module = "captcha-session", operation = "page", description = "分页(数据库)")
+    @RequestLogger(module = "captcha-session", operation = "page", description = "分页(数据库)", recordResponse = false)
     @ApiOperation(value = "分页(数据库)", httpMethod = "POST")
     @PostMapping(value = "/page")
     public BusinessData<PageResponseData<CaptchaResponseDTO>> page(

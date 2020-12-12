@@ -7,6 +7,7 @@ import com.wondernect.elements.common.exception.BusinessException;
 import com.wondernect.elements.common.response.BusinessData;
 import com.wondernect.elements.common.utils.ESObjectUtils;
 import com.wondernect.elements.common.utils.ESStringUtils;
+import com.wondernect.elements.logger.request.RequestLogger;
 import com.wondernect.elements.rdb.response.PageResponseData;
 import com.wondernect.stars.rbac.dto.menu.*;
 import com.wondernect.stars.rbac.feign.menu.MenuFeignClient;
@@ -42,6 +43,7 @@ public class MenuController {
     private MenuServerService menuServerService;
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
+    @RequestLogger(module = "menu", operation = "create", description = "创建菜单")
     @ApiOperation(value = "创建菜单", httpMethod = "POST")
     @PostMapping(value = "/create")
     public BusinessData<MenuResponseDTO> create(
@@ -51,6 +53,7 @@ public class MenuController {
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
+    @RequestLogger(module = "menu", operation = "update", description = "更新菜单")
     @ApiOperation(value = "更新菜单", httpMethod = "POST")
     @PostMapping(value = "/{id}/update")
     public BusinessData<MenuResponseDTO> update(
@@ -61,6 +64,7 @@ public class MenuController {
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
+    @RequestLogger(module = "menu", operation = "delete", description = "删除菜单")
     @ApiOperation(value = "删除菜单", httpMethod = "POST")
     @PostMapping(value = "/{id}/delete")
     public BusinessData delete(
@@ -70,22 +74,17 @@ public class MenuController {
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
+    @RequestLogger(module = "menu", operation = "detail", description = "获取菜单详情", recordResponse = false)
     @ApiOperation(value = "获取菜单详情", httpMethod = "GET")
     @GetMapping(value = "/{id}/detail")
-    public BusinessData<MenuResponseDTO> get(
+    public BusinessData<MenuResponseDTO> detail(
             @ApiParam(required = true) @NotBlank(message = "请求参数不能为空") @PathVariable(value = "id", required = false) String id
     ) {
-        return menuFeignClient.get(id);
+        return menuFeignClient.detail(id);
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
-    @ApiOperation(value = "获取菜单根节点", httpMethod = "GET")
-    @GetMapping(value = "/root")
-    public BusinessData<MenuResponseDTO> root() {
-        return menuFeignClient.root();
-    }
-
-    @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
+    @RequestLogger(module = "menu", operation = "list", description = "菜单列表", recordResponse = false)
     @ApiOperation(value = "菜单列表", httpMethod = "POST")
     @PostMapping(value = "/list")
     public BusinessData<List<MenuResponseDTO>> list(
@@ -95,6 +94,7 @@ public class MenuController {
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
+    @RequestLogger(module = "menu", operation = "page", description = "菜单分页", recordResponse = false)
     @ApiOperation(value = "菜单分页", httpMethod = "POST")
     @PostMapping(value = "/page")
     public BusinessData<PageResponseData<MenuResponseDTO>> page(
@@ -104,6 +104,15 @@ public class MenuController {
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
+    @RequestLogger(module = "menu", operation = "root", description = "获取菜单根节点", recordResponse = false)
+    @ApiOperation(value = "获取菜单根节点", httpMethod = "GET")
+    @GetMapping(value = "/root")
+    public BusinessData<MenuResponseDTO> root() {
+        return menuFeignClient.root();
+    }
+
+    @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
+    @RequestLogger(module = "menu", operation = "tree", description = "菜单树形结构", recordResponse = false)
     @ApiOperation(value = "菜单树形结构", httpMethod = "GET")
     @GetMapping(value = "/tree")
     public BusinessData<MenuTreeResponseDTO> tree(
@@ -116,7 +125,7 @@ public class MenuController {
                 throw new BusinessException("当前应用没有根节点菜单,请先创建");
             }
         } else {
-            menuResponseDTO = menuServerService.get(rootMenuId);
+            menuResponseDTO = menuServerService.detail(rootMenuId);
             if (ESObjectUtils.isNull(menuResponseDTO)) {
                 throw new BusinessException("菜单不存在");
             }

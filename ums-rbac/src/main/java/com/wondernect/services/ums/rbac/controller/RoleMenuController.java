@@ -7,6 +7,7 @@ import com.wondernect.elements.common.exception.BusinessException;
 import com.wondernect.elements.common.response.BusinessData;
 import com.wondernect.elements.common.utils.ESObjectUtils;
 import com.wondernect.elements.common.utils.ESStringUtils;
+import com.wondernect.elements.logger.request.RequestLogger;
 import com.wondernect.stars.rbac.dto.MenuAuthorityResponseDTO;
 import com.wondernect.stars.rbac.dto.RoleAuthorityResponseDTO;
 import com.wondernect.stars.rbac.dto.menu.MenuResponseDTO;
@@ -46,24 +47,27 @@ public class RoleMenuController {
     private MenuServerService menuServerService;
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
+    @RequestLogger(module = "role_menu", operation = "add", description = "勾选菜单")
     @ApiOperation(value = "勾选菜单", httpMethod = "POST")
     @PostMapping(value = "/add")
-    public BusinessData create(
+    public BusinessData add(
             @ApiParam(required = true) @NotNull(message = "请求参数不能为空") @Validated @RequestBody(required = false) RoleMenuRequestDTO roleMenuRequestDTO
     ) {
-        return roleMenuFeignClient.create(roleMenuRequestDTO);
+        return roleMenuFeignClient.add(roleMenuRequestDTO);
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
+    @RequestLogger(module = "role_menu", operation = "edit", description = "编辑勾选菜单")
     @ApiOperation(value = "编辑勾选菜单", httpMethod = "POST")
     @PostMapping(value = "/edit")
-    public BusinessData update(
+    public BusinessData edit(
             @ApiParam(required = true) @NotNull(message = "请求参数不能为空") @Validated @RequestBody(required = false) RoleMenuRequestDTO roleMenuRequestDTO
     ) {
-        return roleMenuFeignClient.update(roleMenuRequestDTO);
+        return roleMenuFeignClient.edit(roleMenuRequestDTO);
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
+    @RequestLogger(module = "role_menu", operation = "delete", description = "取消勾选菜单")
     @ApiOperation(value = "取消勾选菜单", httpMethod = "POST")
     @PostMapping(value = "/delete")
     public BusinessData delete(
@@ -73,6 +77,7 @@ public class RoleMenuController {
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
+    @RequestLogger(module = "role_menu", operation = "detail", description = "获取角色菜单", recordResponse = false)
     @ApiOperation(value = "获取角色菜单", httpMethod = "GET")
     @GetMapping(value = "/detail")
     public BusinessData<RoleMenuResponseDTO> detail(
@@ -83,6 +88,7 @@ public class RoleMenuController {
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
+    @RequestLogger(module = "role_menu", operation = "tree", description = "角色对应菜单树形结构", recordResponse = false)
     @ApiOperation(value = "角色对应菜单树形结构", httpMethod = "GET")
     @GetMapping(value = "/tree")
     public BusinessData<RoleMenuTreeResponseDTO> tree(
@@ -96,7 +102,7 @@ public class RoleMenuController {
                 throw new BusinessException("当前应用没有根节点菜单,请先创建");
             }
         } else {
-            menuResponseDTO = menuServerService.get(menuId);
+            menuResponseDTO = menuServerService.detail(menuId);
             if (ESObjectUtils.isNull(menuResponseDTO)) {
                 throw new BusinessException("菜单不存在");
             }
@@ -105,6 +111,7 @@ public class RoleMenuController {
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
+    @RequestLogger(module = "role_menu", operation = "roleAuthority", description = "角色对应权限", recordResponse = false)
     @ApiOperation(value = "角色对应权限", httpMethod = "POST")
     @PostMapping(value = "/{role_id}/authority")
     public BusinessData<RoleAuthorityResponseDTO> roleAuthority(
@@ -114,11 +121,12 @@ public class RoleMenuController {
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
-    @ApiOperation(value = "角色对应权限", httpMethod = "POST")
+    @RequestLogger(module = "role_menu", operation = "roleListAuthority", description = "角色列表对应权限", recordResponse = false)
+    @ApiOperation(value = "角色列表对应权限", httpMethod = "POST")
     @PostMapping(value = "/authority")
-    public BusinessData<List<MenuAuthorityResponseDTO>> roleAuthority(
+    public BusinessData<List<MenuAuthorityResponseDTO>> roleListAuthority(
             @ApiParam(required = true) @NotNull(message = "请求参数不能为空") @RequestBody(required = false) List<String> roleIdList
     ) {
-        return roleMenuFeignClient.roleAuthority(roleIdList);
+        return roleMenuFeignClient.roleListAuthority(roleIdList);
     }
 }

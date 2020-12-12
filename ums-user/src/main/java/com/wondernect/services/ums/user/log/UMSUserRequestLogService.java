@@ -1,7 +1,7 @@
 package com.wondernect.services.ums.user.log;
 
 import com.wondernect.elements.common.utils.ESStringUtils;
-import com.wondernect.elements.logger.AbstractRequestLoggerRecordService;
+import com.wondernect.elements.logger.request.AbstractRequestLoggerRecordService;
 import org.springframework.stereotype.Service;
 
 /**

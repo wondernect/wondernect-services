@@ -74,7 +74,7 @@ public class LocalUserExcelExportFileService extends ESExcelExportFileService {
                 throw new BusinessException("当前应用没有根节点文件存储路径,请先创建");
             }
         } else {
-            localFilePathResponseDTO = localFilePathServerService.get(localFilePathId);
+            localFilePathResponseDTO = localFilePathServerService.detail(localFilePathId);
             if (ESObjectUtils.isNull(localFilePathResponseDTO)) {
                 throw new BusinessException("文件存储路径不存在");
             }
@@ -109,7 +109,7 @@ public class LocalUserExcelExportFileService extends ESExcelExportFileService {
                 throw new BusinessException("当前应用没有根节点文件存储路径,请先创建");
             }
         } else {
-            localFilePathResponseDTO = localFilePathServerService.get(localFilePathId);
+            localFilePathResponseDTO = localFilePathServerService.detail(localFilePathId);
             if (ESObjectUtils.isNull(localFilePathResponseDTO)) {
                 throw new BusinessException("文件存储路径不存在");
             }

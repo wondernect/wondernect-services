@@ -6,7 +6,7 @@ import com.wondernect.elements.authorize.context.interceptor.AuthorizeType;
 import com.wondernect.elements.authorize.context.interceptor.AuthorizeUserRole;
 import com.wondernect.elements.common.response.BusinessData;
 import com.wondernect.elements.common.utils.ESStringUtils;
-import com.wondernect.elements.logger.RequestLogger;
+import com.wondernect.elements.logger.request.RequestLogger;
 import com.wondernect.elements.rdb.response.PageResponseData;
 import com.wondernect.stars.app.dto.*;
 import com.wondernect.stars.app.feign.app.AppFeignClient;

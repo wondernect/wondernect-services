@@ -4,7 +4,7 @@ import com.wondernect.elements.authorize.context.interceptor.AuthorizeRoleType;
 import com.wondernect.elements.authorize.context.interceptor.AuthorizeType;
 import com.wondernect.elements.authorize.context.interceptor.AuthorizeUserRole;
 import com.wondernect.elements.common.response.BusinessData;
-import com.wondernect.elements.logger.RequestLogger;
+import com.wondernect.elements.logger.request.RequestLogger;
 import com.wondernect.elements.rdb.response.PageResponseData;
 import com.wondernect.stars.session.dto.token.*;
 import com.wondernect.stars.session.feign.tokenSession.TokenSessionFeignClient;
@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.util.List;
 
 /**
  * Copyright (C), 2017-2019, wondernect.com
@@ -73,7 +72,7 @@ public class TokenSessionController {
     // }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
-    @RequestLogger(module = "token-session", operation = "auth", description = "验证令牌(缓存&数据库)")
+    @RequestLogger(module = "token-session", operation = "auth", description = "验证令牌(缓存&数据库)", recordResponse = false)
     @ApiOperation(value = "验证令牌(缓存&数据库)", httpMethod = "POST")
     @PostMapping(value = "/auth")
     public BusinessData<TokenResponseDTO> auth(
@@ -92,7 +91,7 @@ public class TokenSessionController {
     // }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
-    @RequestLogger(module = "token-session", operation = "page", description = "分页(数据库)")
+    @RequestLogger(module = "token-session", operation = "page", description = "分页(数据库)", recordResponse = false)
     @ApiOperation(value = "分页(数据库)", httpMethod = "POST")
     @PostMapping(value = "/page")
     public BusinessData<PageResponseData<TokenResponseDTO>> page(

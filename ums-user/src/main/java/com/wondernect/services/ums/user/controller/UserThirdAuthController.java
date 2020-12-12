@@ -4,7 +4,7 @@ import com.wondernect.elements.authorize.context.interceptor.AuthorizeRoleType;
 import com.wondernect.elements.authorize.context.interceptor.AuthorizeType;
 import com.wondernect.elements.authorize.context.interceptor.AuthorizeUserRole;
 import com.wondernect.elements.common.response.BusinessData;
-import com.wondernect.elements.logger.RequestLogger;
+import com.wondernect.elements.logger.request.RequestLogger;
 import com.wondernect.stars.user.dto.auth.third.AuthUserThirdAuthRequestDTO;
 import com.wondernect.stars.user.dto.auth.third.SaveUserThirdAuthRequestDTO;
 import com.wondernect.stars.user.dto.auth.third.UserThirdAuthResponseDTO;
@@ -70,7 +70,7 @@ public class UserThirdAuthController {
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
-    @RequestLogger(module = "third_auth", operation = "detail", description = "获取详情")
+    @RequestLogger(module = "third_auth", operation = "detail", description = "获取详情", recordResponse = false)
     @ApiOperation(value = "获取详情", httpMethod = "GET")
     @GetMapping(value = "/{id}/detail")
     public BusinessData<UserThirdAuthResponseDTO> detail(
@@ -81,7 +81,7 @@ public class UserThirdAuthController {
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
-    @RequestLogger(module = "third_auth", operation = "detailByAppTypeAndAppUserId", description = "获取详情")
+    @RequestLogger(module = "third_auth", operation = "detailByAppTypeAndAppUserId", description = "获取详情", recordResponse = false)
     @ApiOperation(value = "获取详情", httpMethod = "GET")
     @GetMapping(value = "/detail")
     public BusinessData<UserThirdAuthResponseDTO> detailByAppTypeAndAppUserId(
@@ -92,7 +92,7 @@ public class UserThirdAuthController {
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
-    @RequestLogger(module = "third_auth", operation = "auth", description = "认证")
+    @RequestLogger(module = "third_auth", operation = "auth", description = "认证", recordResponse = false)
     @ApiOperation(value = "认证", httpMethod = "POST")
     @PostMapping(value = "/auth")
     public BusinessData<UserThirdAuthResponseDTO> auth(

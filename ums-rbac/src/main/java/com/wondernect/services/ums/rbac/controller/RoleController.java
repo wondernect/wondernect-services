@@ -4,6 +4,7 @@ import com.wondernect.elements.authorize.context.interceptor.AuthorizeRoleType;
 import com.wondernect.elements.authorize.context.interceptor.AuthorizeType;
 import com.wondernect.elements.authorize.context.interceptor.AuthorizeUserRole;
 import com.wondernect.elements.common.response.BusinessData;
+import com.wondernect.elements.logger.request.RequestLogger;
 import com.wondernect.elements.rdb.response.PageResponseData;
 import com.wondernect.stars.rbac.dto.role.ListRoleRequestDTO;
 import com.wondernect.stars.rbac.dto.role.PageRoleRequestDTO;
@@ -38,6 +39,7 @@ public class RoleController {
     private RoleFeignClient roleFeignClient;
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
+    @RequestLogger(module = "role", operation = "create", description = "创建角色")
     @ApiOperation(value = "创建角色", httpMethod = "POST")
     @PostMapping(value = "/create")
     public BusinessData<RoleResponseDTO> create(
@@ -47,6 +49,7 @@ public class RoleController {
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
+    @RequestLogger(module = "role", operation = "update", description = "更新角色")
     @ApiOperation(value = "更新角色", httpMethod = "POST")
     @PostMapping(value = "/{id}/update")
     public BusinessData<RoleResponseDTO> update(
@@ -57,6 +60,7 @@ public class RoleController {
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
+    @RequestLogger(module = "role", operation = "delete", description = "删除角色")
     @ApiOperation(value = "删除角色", httpMethod = "POST")
     @PostMapping(value = "/{id}/delete")
     public BusinessData delete(
@@ -66,15 +70,17 @@ public class RoleController {
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
+    @RequestLogger(module = "role", operation = "detail", description = "获取角色详情", recordResponse = false)
     @ApiOperation(value = "获取角色详情", httpMethod = "GET")
     @GetMapping(value = "/{id}/detail")
-    public BusinessData<RoleResponseDTO> get(
+    public BusinessData<RoleResponseDTO> detail(
             @ApiParam(required = true) @NotBlank(message = "请求参数不能为空") @PathVariable(value = "id", required = false) String id
     ) {
-        return roleFeignClient.get(id);
+        return roleFeignClient.detail(id);
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
+    @RequestLogger(module = "role", operation = "list", description = "角色列表", recordResponse = false)
     @ApiOperation(value = "角色列表", httpMethod = "POST")
     @PostMapping(value = "/list")
     public BusinessData<List<RoleResponseDTO>> list(
@@ -84,6 +90,7 @@ public class RoleController {
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
+    @RequestLogger(module = "role", operation = "page", description = "角色分页", recordResponse = false)
     @ApiOperation(value = "角色分页", httpMethod = "POST")
     @PostMapping(value = "/page")
     public BusinessData<PageResponseData<RoleResponseDTO>> page(

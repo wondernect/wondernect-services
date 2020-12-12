@@ -4,6 +4,7 @@ import com.wondernect.elements.authorize.context.interceptor.AuthorizeRoleType;
 import com.wondernect.elements.authorize.context.interceptor.AuthorizeType;
 import com.wondernect.elements.authorize.context.interceptor.AuthorizeUserRole;
 import com.wondernect.elements.common.response.BusinessData;
+import com.wondernect.elements.logger.request.RequestLogger;
 import com.wondernect.elements.rdb.response.PageResponseData;
 import com.wondernect.stars.file.dto.*;
 import com.wondernect.stars.file.feign.path.LocalFilePathFeignClient;
@@ -35,6 +36,7 @@ public class LocalFilePathController {
     private LocalFilePathFeignClient localFilePathFeignClient;
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
+    @RequestLogger(module = "local_file_path", operation = "create", description = "创建")
     @ApiOperation(value = "创建", httpMethod = "POST")
     @PostMapping(value = "/create")
     public BusinessData<LocalFilePathResponseDTO> create(
@@ -43,6 +45,8 @@ public class LocalFilePathController {
         return localFilePathFeignClient.create(saveLocalFilePathRequestDTO);
     }
 
+    @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
+    @RequestLogger(module = "local_file_path", operation = "update", description = "更新")
     @ApiOperation(value = "更新", httpMethod = "POST")
     @PostMapping(value = "/{id}/update")
     public BusinessData<LocalFilePathResponseDTO> update(
@@ -52,6 +56,8 @@ public class LocalFilePathController {
         return localFilePathFeignClient.update(id, saveLocalFilePathRequestDTO);
     }
 
+    @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
+    @RequestLogger(module = "local_file_path", operation = "delete", description = "删除")
     @ApiOperation(value = "删除", httpMethod = "POST")
     @PostMapping(value = "/{id}/delete")
     public BusinessData delete(
@@ -61,22 +67,17 @@ public class LocalFilePathController {
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
+    @RequestLogger(module = "local_file_path", operation = "detail", description = "获取")
     @ApiOperation(value = "获取", httpMethod = "GET")
     @GetMapping(value = "/{id}/detail")
-    public BusinessData<LocalFilePathResponseDTO> get(
+    public BusinessData<LocalFilePathResponseDTO> detail(
             @ApiParam(required = true) @NotBlank(message = "请求参数不能为空") @PathVariable(value = "id", required = false) String id
     ) {
-        return localFilePathFeignClient.get(id);
+        return localFilePathFeignClient.detail(id);
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
-    @ApiOperation(value = "获取根节点", httpMethod = "GET")
-    @GetMapping(value = "/root")
-    public BusinessData<LocalFilePathResponseDTO> root() {
-        return localFilePathFeignClient.root();
-    }
-
-    @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
+    @RequestLogger(module = "local_file_path", operation = "list", description = "列表")
     @ApiOperation(value = "列表", httpMethod = "POST")
     @PostMapping(value = "/list")
     public BusinessData<List<LocalFilePathResponseDTO>> list(
@@ -86,6 +87,7 @@ public class LocalFilePathController {
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
+    @RequestLogger(module = "local_file_path", operation = "page", description = "分页")
     @ApiOperation(value = "分页", httpMethod = "POST")
     @PostMapping(value = "/page")
     public BusinessData<PageResponseData<LocalFilePathResponseDTO>> page(
@@ -95,6 +97,15 @@ public class LocalFilePathController {
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
+    @RequestLogger(module = "local_file_path", operation = "root", description = "获取根节点")
+    @ApiOperation(value = "获取根节点", httpMethod = "GET")
+    @GetMapping(value = "/root")
+    public BusinessData<LocalFilePathResponseDTO> root() {
+        return localFilePathFeignClient.root();
+    }
+
+    @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
+    @RequestLogger(module = "local_file_path", operation = "tree", description = "树形结构")
     @ApiOperation(value = "树形结构", httpMethod = "GET")
     @GetMapping(value = "/{root_file_path_id}/tree")
     public BusinessData<LocalFilePathTreeResponseDTO> tree(
