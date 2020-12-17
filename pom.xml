@@ -30,6 +30,7 @@
         <module>ums-session</module>
         <module>ums-database</module>
         <module>ums-office</module>
+        <module>ums-mail</module>
     </modules>
 
     <dependencies>

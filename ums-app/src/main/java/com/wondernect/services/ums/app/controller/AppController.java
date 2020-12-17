@@ -70,7 +70,7 @@ public class AppController {
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
-    @RequestLogger(module = "app", operation = "detail", description = "获取详细信息")
+    @RequestLogger(module = "app", operation = "detail", description = "获取详细信息", recordResponse = false)
     @ApiOperation(value = "获取详细信息", httpMethod = "GET")
     @GetMapping(value = "/{id}/detail")
     public BusinessData<AppResponseDTO> detail(
@@ -80,7 +80,7 @@ public class AppController {
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
-    @RequestLogger(module = "app", operation = "list", description = "列表")
+    @RequestLogger(module = "app", operation = "list", description = "列表", recordResponse = false)
     @ApiOperation(value = "列表", httpMethod = "POST")
     @PostMapping(value = "/list")
     public BusinessData<List<AppResponseDTO>> list(
@@ -93,7 +93,7 @@ public class AppController {
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
-    @RequestLogger(module = "app", operation = "page", description = "分页")
+    @RequestLogger(module = "app", operation = "page", description = "分页", recordResponse = false)
     @ApiOperation(value = "分页", httpMethod = "POST")
     @PostMapping(value = "/page")
     public BusinessData<PageResponseData<AppResponseDTO>> page(
