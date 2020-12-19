@@ -23,6 +23,7 @@
     </properties>
 
     <modules>
+        <module>ums</module>
         <module>ums-app</module>
         <module>ums-user</module>
         <module>ums-rbac</module>
@@ -37,12 +38,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-starter-logging</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
 
         <dependency>
@@ -61,12 +56,6 @@
             <artifactId>i18n</artifactId>
         </dependency>
 
-        <!-- elements log -->
-        <dependency>
-            <groupId>com.wondernect.elements</groupId>
-            <artifactId>log</artifactId>
-        </dependency>
-
         <!-- elements swagger-api -->
         <dependency>
             <groupId>com.wondernect.elements</groupId>
@@ -83,19 +72,6 @@
         <dependency>
             <groupId>com.wondernect.elements</groupId>
             <artifactId>boot-application</artifactId>
-        </dependency>
-
-        <!-- mysql connector -->
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <version>8.0.11</version>
-        </dependency>
-
-        <!-- rdb -->
-        <dependency>
-            <groupId>com.wondernect.elements</groupId>
-            <artifactId>rdb</artifactId>
         </dependency>
     </dependencies>
 
