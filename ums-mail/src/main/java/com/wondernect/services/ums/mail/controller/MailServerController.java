@@ -43,7 +43,7 @@ public class MailServerController {
     public BusinessData<MailServerResponseDTO> create(
             @ApiParam(required = true) @NotNull(message = "请求参数不能为空") @Validated @RequestBody(required = false) SaveMailServerRequestDTO saveMailServerRequestDTO
     ) {
-        return new BusinessData<>(mailServerFeignClient.create(saveMailServerRequestDTO));
+        return mailServerFeignClient.create(saveMailServerRequestDTO);
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
@@ -53,7 +53,7 @@ public class MailServerController {
             @ApiParam(required = true) @NotBlank(message = "对象id不能为空") @PathVariable(value = "id", required = false) String id,
             @ApiParam(required = true) @NotNull(message = "请求参数不能为空") @Validated @RequestBody(required = false) SaveMailServerRequestDTO saveMailServerRequestDTO
     ) {
-        return new BusinessData<>(mailServerFeignClient.update(id, saveMailServerRequestDTO));
+        return mailServerFeignClient.update(id, saveMailServerRequestDTO);
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
@@ -62,8 +62,7 @@ public class MailServerController {
     public BusinessData delete(
             @ApiParam(required = true) @NotBlank(message = "对象id不能为空") @PathVariable(value = "id", required = false) String id
     ) {
-        mailServerFeignClient.delete(id);
-        return new BusinessData(BusinessError.SUCCESS);
+        return mailServerFeignClient.delete(id);
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
@@ -72,7 +71,7 @@ public class MailServerController {
     public BusinessData<MailServerResponseDTO> detail(
             @ApiParam(required = true) @NotBlank(message = "对象id不能为空") @PathVariable(value = "id", required = false) String id
     ) {
-        return new BusinessData<>(mailServerFeignClient.detail(id));
+        return mailServerFeignClient.detail(id);
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
@@ -81,7 +80,7 @@ public class MailServerController {
     public BusinessData<List<MailServerResponseDTO>> list(
             @ApiParam(required = true) @NotNull(message = "列表请求参数不能为空") @Validated @RequestBody(required = false) ListMailServerRequestDTO listMailServerRequestDTO
     ) {
-        return new BusinessData<>(mailServerFeignClient.list(listMailServerRequestDTO));
+        return mailServerFeignClient.list(listMailServerRequestDTO);
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
@@ -90,6 +89,6 @@ public class MailServerController {
     public BusinessData<PageResponseData<MailServerResponseDTO>> page(
             @ApiParam(required = true) @NotNull(message = "分页请求参数不能为空") @Validated @RequestBody(required = false) PageMailServerRequestDTO pageMailServerRequestDTO
     ) {
-        return new BusinessData<>(mailServerFeignClient.page(pageMailServerRequestDTO));
+        return mailServerFeignClient.page(pageMailServerRequestDTO);
     }
 }

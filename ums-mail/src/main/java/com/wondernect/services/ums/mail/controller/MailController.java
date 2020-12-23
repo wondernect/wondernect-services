@@ -43,7 +43,7 @@ public class MailController {
     public BusinessData<MailResponseDTO> send(
             @ApiParam(required = true) @NotNull(message = "请求参数不能为空") @Validated @RequestBody(required = false) SendMailRequestDTO sendMailRequestDTO
     ) {
-        return new BusinessData<>(mailFeignClient.send(sendMailRequestDTO));
+        return mailFeignClient.send(sendMailRequestDTO);
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
@@ -52,8 +52,7 @@ public class MailController {
     public BusinessData delete(
             @ApiParam(required = true) @NotBlank(message = "对象id不能为空") @PathVariable(value = "id", required = false) String id
     ) {
-        mailFeignClient.delete(id);
-        return new BusinessData(BusinessError.SUCCESS);
+        return mailFeignClient.delete(id);
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
@@ -62,7 +61,7 @@ public class MailController {
     public BusinessData<MailResponseDTO> detail(
             @ApiParam(required = true) @NotBlank(message = "对象id不能为空") @PathVariable(value = "id", required = false) String id
     ) {
-        return new BusinessData<>(mailFeignClient.detail(id));
+        return mailFeignClient.detail(id);
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
@@ -71,7 +70,7 @@ public class MailController {
     public BusinessData<List<MailResponseDTO>> list(
             @ApiParam(required = true) @NotNull(message = "列表请求参数不能为空") @Validated @RequestBody(required = false) ListMailRequestDTO listMailRequestDTO
     ) {
-        return new BusinessData<>(mailFeignClient.list(listMailRequestDTO));
+        return mailFeignClient.list(listMailRequestDTO);
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
@@ -80,6 +79,6 @@ public class MailController {
     public BusinessData<PageResponseData<MailResponseDTO>> page(
             @ApiParam(required = true) @NotNull(message = "分页请求参数不能为空") @Validated @RequestBody(required = false) PageMailRequestDTO pageMailRequestDTO
     ) {
-        return new BusinessData<>(mailFeignClient.page(pageMailRequestDTO));
+        return mailFeignClient.page(pageMailRequestDTO);
     }
 }

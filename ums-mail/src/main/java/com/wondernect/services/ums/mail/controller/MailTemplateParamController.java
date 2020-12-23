@@ -43,7 +43,7 @@ public class MailTemplateParamController {
     public BusinessData<MailTemplateParamResponseDTO> create(
             @ApiParam(required = true) @NotNull(message = "请求参数不能为空") @Validated @RequestBody(required = false) SaveMailTemplateParamRequestDTO saveMailTemplateParamRequestDTO
     ) {
-        return new BusinessData<>(mailTemplateParamFeignClient.create(saveMailTemplateParamRequestDTO));
+        return mailTemplateParamFeignClient.create(saveMailTemplateParamRequestDTO);
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
@@ -53,7 +53,7 @@ public class MailTemplateParamController {
             @ApiParam(required = true) @NotBlank(message = "对象id不能为空") @PathVariable(value = "id", required = false) String id,
             @ApiParam(required = true) @NotNull(message = "请求参数不能为空") @Validated @RequestBody(required = false) SaveMailTemplateParamRequestDTO saveMailTemplateParamRequestDTO
     ) {
-        return new BusinessData<>(mailTemplateParamFeignClient.update(id, saveMailTemplateParamRequestDTO));
+        return mailTemplateParamFeignClient.update(id, saveMailTemplateParamRequestDTO);
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
@@ -62,8 +62,7 @@ public class MailTemplateParamController {
     public BusinessData delete(
             @ApiParam(required = true) @NotBlank(message = "对象id不能为空") @PathVariable(value = "id", required = false) String id
     ) {
-        mailTemplateParamFeignClient.delete(id);
-        return new BusinessData(BusinessError.SUCCESS);
+        return mailTemplateParamFeignClient.delete(id);
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
@@ -72,7 +71,7 @@ public class MailTemplateParamController {
     public BusinessData<MailTemplateParamResponseDTO> detail(
             @ApiParam(required = true) @NotBlank(message = "对象id不能为空") @PathVariable(value = "id", required = false) String id
     ) {
-        return new BusinessData<>(mailTemplateParamFeignClient.detail(id));
+        return mailTemplateParamFeignClient.detail(id);
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
@@ -81,7 +80,7 @@ public class MailTemplateParamController {
     public BusinessData<List<MailTemplateParamResponseDTO>> list(
             @ApiParam(required = true) @NotNull(message = "列表请求参数不能为空") @Validated @RequestBody(required = false) ListMailTemplateParamRequestDTO listMailTemplateParamRequestDTO
     ) {
-        return new BusinessData<>(mailTemplateParamFeignClient.list(listMailTemplateParamRequestDTO));
+        return mailTemplateParamFeignClient.list(listMailTemplateParamRequestDTO);
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
@@ -90,6 +89,6 @@ public class MailTemplateParamController {
     public BusinessData<PageResponseData<MailTemplateParamResponseDTO>> page(
             @ApiParam(required = true) @NotNull(message = "分页请求参数不能为空") @Validated @RequestBody(required = false) PageMailTemplateParamRequestDTO pageMailTemplateParamRequestDTO
     ) {
-        return new BusinessData<>(mailTemplateParamFeignClient.page(pageMailTemplateParamRequestDTO));
+        return mailTemplateParamFeignClient.page(pageMailTemplateParamRequestDTO);
     }
 }
