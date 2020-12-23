@@ -39,7 +39,7 @@ public class DatabaseUserRightsShipController {
     public BusinessData<DatabaseUserRightsShipResponseDTO> detail(
             @ApiParam(required = true) @NotBlank(message = "对象id不能为空") @PathVariable(value = "id", required = false) String id
     ) {
-        return new BusinessData<>(databaseUserRightsShipFeignClient.detail(id));
+        return databaseUserRightsShipFeignClient.detail(id);
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
@@ -48,7 +48,7 @@ public class DatabaseUserRightsShipController {
     public BusinessData<List<DatabaseUserRightsShipResponseDTO>> list(
             @ApiParam(required = true) @NotNull(message = "列表请求参数不能为空") @Validated @RequestBody(required = false) ListDatabaseUserRightsShipRequestDTO listDatabaseUserRightsShipRequestDTO
     ) {
-        return new BusinessData<>(databaseUserRightsShipFeignClient.list(listDatabaseUserRightsShipRequestDTO));
+        return databaseUserRightsShipFeignClient.list(listDatabaseUserRightsShipRequestDTO);
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
@@ -57,7 +57,7 @@ public class DatabaseUserRightsShipController {
     public BusinessData<PageResponseData<DatabaseUserRightsShipResponseDTO>> page(
             @ApiParam(required = true) @NotNull(message = "分页请求参数不能为空") @Validated @RequestBody(required = false) PageDatabaseUserRightsShipRequestDTO pageDatabaseUserRightsShipRequestDTO
     ) {
-        return new BusinessData<>(databaseUserRightsShipFeignClient.page(pageDatabaseUserRightsShipRequestDTO));
+        return databaseUserRightsShipFeignClient.page(pageDatabaseUserRightsShipRequestDTO);
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
@@ -67,7 +67,7 @@ public class DatabaseUserRightsShipController {
             @ApiParam(required = true) @NotNull(message = "1-只读权限，2-所有权限") @PathVariable(value = "type", required = false) Integer type,
             @ApiParam(required = true) @NotNull(message = "请求参数不能为空") @Validated @RequestBody(required = false) SaveDatabaseUserRightsShipRequestDTO saveDatabaseUserRightsShipRequestDTO
     ) {
-        return new BusinessData<>(databaseUserRightsShipFeignClient.giveRights(type, saveDatabaseUserRightsShipRequestDTO));
+        return databaseUserRightsShipFeignClient.giveRights(type, saveDatabaseUserRightsShipRequestDTO);
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
@@ -76,8 +76,7 @@ public class DatabaseUserRightsShipController {
     public BusinessData revokeRights(
             @ApiParam(required = true) @NotNull(message = "请求参数不能为空") @Validated @RequestBody(required = false) SaveDatabaseUserRightsShipRequestDTO saveDatabaseUserRightsShipRequestDTO
     ) {
-        databaseUserRightsShipFeignClient.revokeRights(saveDatabaseUserRightsShipRequestDTO);
-        return new BusinessData(BusinessError.SUCCESS);
+        return databaseUserRightsShipFeignClient.revokeRights(saveDatabaseUserRightsShipRequestDTO);
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
@@ -86,6 +85,6 @@ public class DatabaseUserRightsShipController {
     public BusinessData<TestConnectResponseDTO> testConnect(
             @ApiParam(required = true) @NotNull(message = "请求参数不能为空") @Validated @RequestBody(required = false) DatabaseUserRequestDTO databaseUserRequestDTO
     ) {
-        return new BusinessData<>(databaseUserRightsShipFeignClient.testConnect(databaseUserRequestDTO));
+        return databaseUserRightsShipFeignClient.testConnect(databaseUserRequestDTO);
     }
 }

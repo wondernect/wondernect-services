@@ -42,7 +42,7 @@ public class DatabaseManageController {
     public BusinessData<DatabaseManageResponseDTO> create(
             @ApiParam(required = true) @NotNull(message = "请求参数不能为空") @Validated @RequestBody(required = false) SaveDatabaseManageRequestDTO saveDatabaseManageRequestDTO
     ) {
-        return new BusinessData<>(databaseManageFeignClient.create(saveDatabaseManageRequestDTO));
+        return databaseManageFeignClient.create(saveDatabaseManageRequestDTO);
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
@@ -52,7 +52,7 @@ public class DatabaseManageController {
             @ApiParam(required = true) @NotBlank(message = "对象id不能为空") @PathVariable(value = "id", required = false) String id,
             @ApiParam(required = true) @NotNull(message = "请求参数不能为空") @Validated @RequestBody(required = false) SaveDatabaseManageRequestDTO saveDatabaseManageRequestDTO
     ) {
-        return new BusinessData<>(databaseManageFeignClient.update(id, saveDatabaseManageRequestDTO));
+        return databaseManageFeignClient.update(id, saveDatabaseManageRequestDTO);
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
@@ -61,8 +61,7 @@ public class DatabaseManageController {
     public BusinessData delete(
             @ApiParam(required = true) @NotBlank(message = "对象id不能为空") @PathVariable(value = "id", required = false) String id
     ) {
-        databaseManageFeignClient.delete(id);
-        return new BusinessData(BusinessError.SUCCESS);
+        return databaseManageFeignClient.delete(id);
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
@@ -71,7 +70,7 @@ public class DatabaseManageController {
     public BusinessData<DatabaseManageResponseDTO> detail(
             @ApiParam(required = true) @NotBlank(message = "对象id不能为空") @PathVariable(value = "id", required = false) String id
     ) {
-        return new BusinessData<>(databaseManageFeignClient.detail(id));
+        return databaseManageFeignClient.detail(id);
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
@@ -80,7 +79,7 @@ public class DatabaseManageController {
     public BusinessData<List<DatabaseManageResponseDTO>> list(
             @ApiParam(required = true) @NotNull(message = "列表请求参数不能为空") @Validated @RequestBody(required = false) ListDatabaseManageRequestDTO listDatabaseManageRequestDTO
     ) {
-        return new BusinessData<>(databaseManageFeignClient.list(listDatabaseManageRequestDTO));
+        return databaseManageFeignClient.list(listDatabaseManageRequestDTO);
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
@@ -89,7 +88,7 @@ public class DatabaseManageController {
     public BusinessData<PageResponseData<DatabaseManageResponseDTO>> page(
             @ApiParam(required = true) @NotNull(message = "分页请求参数不能为空") @Validated @RequestBody(required = false) PageDatabaseManageRequestDTO pageDatabaseManageRequestDTO
     ) {
-        return new BusinessData<>(databaseManageFeignClient.page(pageDatabaseManageRequestDTO));
+        return databaseManageFeignClient.page(pageDatabaseManageRequestDTO);
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
@@ -98,7 +97,7 @@ public class DatabaseManageController {
     public BusinessData<DatabaseManageResponseDTO> initDatabase(
             @ApiParam(required = true) @NotBlank(message = "请求参数不能为空") @RequestParam(value = "id", required = false) String id
     ) {
-        return new BusinessData<>(databaseManageFeignClient.initDatabase(id));
+        return databaseManageFeignClient.initDatabase(id);
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
@@ -107,7 +106,7 @@ public class DatabaseManageController {
     public BusinessData<List<DatabaseManageResponseDTO>> userHasRightsList(
             @ApiParam(required = true) @NotBlank(message = "请求参数不能为空") @RequestParam(value = "database_user_id", required = false) String databaseUserId
     ) {
-        return new BusinessData<>(databaseManageFeignClient.userHasRightsList(databaseUserId));
+        return databaseManageFeignClient.userHasRightsList(databaseUserId);
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
@@ -116,6 +115,6 @@ public class DatabaseManageController {
     public BusinessData<List<DatabaseManageResponseDTO>> userNoRightsList(
             @ApiParam(required = true) @NotBlank(message = "请求参数不能为空") @RequestParam(value = "database_user_id", required = false) String databaseUserId
     ) {
-        return new BusinessData<>(databaseManageFeignClient.userNoRightsList(databaseUserId));
+        return databaseManageFeignClient.userNoRightsList(databaseUserId);
     }
 }

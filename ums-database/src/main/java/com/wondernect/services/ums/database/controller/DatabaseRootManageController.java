@@ -42,7 +42,7 @@ public class DatabaseRootManageController {
     public BusinessData<DatabaseRootManageResponseDTO> create(
             @ApiParam(required = true) @NotNull(message = "请求参数不能为空") @Validated @RequestBody(required = false) SaveDatabaseRootManageRequestDTO saveDatabaseRootManageRequestDTO
     ) {
-        return new BusinessData<>(databaseRootManageFeignClient.create(saveDatabaseRootManageRequestDTO));
+        return databaseRootManageFeignClient.create(saveDatabaseRootManageRequestDTO);
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
@@ -52,7 +52,7 @@ public class DatabaseRootManageController {
             @ApiParam(required = true) @NotBlank(message = "对象id不能为空") @PathVariable(value = "id", required = false) String id,
             @ApiParam(required = true) @NotNull(message = "请求参数不能为空") @Validated @RequestBody(required = false) SaveDatabaseRootManageRequestDTO saveDatabaseRootManageRequestDTO
     ) {
-        return new BusinessData<>(databaseRootManageFeignClient.update(id, saveDatabaseRootManageRequestDTO));
+        return databaseRootManageFeignClient.update(id, saveDatabaseRootManageRequestDTO);
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
@@ -61,8 +61,7 @@ public class DatabaseRootManageController {
     public BusinessData delete(
             @ApiParam(required = true) @NotBlank(message = "对象id不能为空") @PathVariable(value = "id", required = false) String id
     ) {
-        databaseRootManageFeignClient.delete(id);
-        return new BusinessData(BusinessError.SUCCESS);
+        return databaseRootManageFeignClient.delete(id);
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
@@ -71,7 +70,7 @@ public class DatabaseRootManageController {
     public BusinessData<DatabaseRootManageResponseDTO> detail(
             @ApiParam(required = true) @NotBlank(message = "对象id不能为空") @PathVariable(value = "id", required = false) String id
     ) {
-        return new BusinessData<>(databaseRootManageFeignClient.detail(id));
+        return databaseRootManageFeignClient.detail(id);
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
@@ -80,7 +79,7 @@ public class DatabaseRootManageController {
     public BusinessData<List<DatabaseRootManageResponseDTO>> list(
             @ApiParam(required = true) @NotNull(message = "列表请求参数不能为空") @Validated @RequestBody(required = false) ListDatabaseRootManageRequestDTO listDatabaseRootManageRequestDTO
     ) {
-        return new BusinessData<>(databaseRootManageFeignClient.list(listDatabaseRootManageRequestDTO));
+        return databaseRootManageFeignClient.list(listDatabaseRootManageRequestDTO);
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
@@ -89,6 +88,6 @@ public class DatabaseRootManageController {
     public BusinessData<PageResponseData<DatabaseRootManageResponseDTO>> page(
             @ApiParam(required = true) @NotNull(message = "分页请求参数不能为空") @Validated @RequestBody(required = false) PageDatabaseRootManageRequestDTO pageDatabaseRootManageRequestDTO
     ) {
-        return new BusinessData<>(databaseRootManageFeignClient.page(pageDatabaseRootManageRequestDTO));
+        return databaseRootManageFeignClient.page(pageDatabaseRootManageRequestDTO);
     }
 }

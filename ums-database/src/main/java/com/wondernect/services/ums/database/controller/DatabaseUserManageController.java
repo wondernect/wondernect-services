@@ -39,7 +39,7 @@ public class DatabaseUserManageController {
     public BusinessData<DatabaseUserManageResponseDTO> create(
             @ApiParam(required = true) @NotNull(message = "请求参数不能为空") @Validated @RequestBody(required = false) SaveDatabaseUserManageRequestDTO saveDatabaseUserManageRequestDTO
     ) {
-        return new BusinessData<>(databaseUserManageFeignClient.create(saveDatabaseUserManageRequestDTO));
+        return databaseUserManageFeignClient.create(saveDatabaseUserManageRequestDTO);
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
@@ -49,7 +49,7 @@ public class DatabaseUserManageController {
             @ApiParam(required = true) @NotBlank(message = "对象id不能为空") @PathVariable(value = "id", required = false) String id,
             @ApiParam(required = true) @NotNull(message = "请求参数不能为空") @Validated @RequestBody(required = false) SaveDatabaseUserManageRequestDTO saveDatabaseUserManageRequestDTO
     ) {
-        return new BusinessData<>(databaseUserManageFeignClient.update(id, saveDatabaseUserManageRequestDTO));
+        return databaseUserManageFeignClient.update(id, saveDatabaseUserManageRequestDTO);
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
@@ -58,8 +58,7 @@ public class DatabaseUserManageController {
     public BusinessData delete(
             @ApiParam(required = true) @NotBlank(message = "对象id不能为空") @PathVariable(value = "id", required = false) String id
     ) {
-        databaseUserManageFeignClient.delete(id);
-        return new BusinessData(BusinessError.SUCCESS);
+        return databaseUserManageFeignClient.delete(id);
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
@@ -68,7 +67,7 @@ public class DatabaseUserManageController {
     public BusinessData<DatabaseUserManageResponseDTO> detail(
             @ApiParam(required = true) @NotBlank(message = "对象id不能为空") @PathVariable(value = "id", required = false) String id
     ) {
-        return new BusinessData<>(databaseUserManageFeignClient.detail(id));
+        return databaseUserManageFeignClient.detail(id);
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
@@ -77,7 +76,7 @@ public class DatabaseUserManageController {
     public BusinessData<List<DatabaseUserManageResponseDTO>> list(
             @ApiParam(required = true) @NotNull(message = "列表请求参数不能为空") @Validated @RequestBody(required = false) ListDatabaseUserManageRequestDTO listDatabaseUserManageRequestDTO
     ) {
-        return new BusinessData<>(databaseUserManageFeignClient.list(listDatabaseUserManageRequestDTO));
+        return databaseUserManageFeignClient.list(listDatabaseUserManageRequestDTO);
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
@@ -86,7 +85,7 @@ public class DatabaseUserManageController {
     public BusinessData<PageResponseData<DatabaseUserManageResponseDTO>> page(
             @ApiParam(required = true) @NotNull(message = "分页请求参数不能为空") @Validated @RequestBody(required = false) PageDatabaseUserManageRequestDTO pageDatabaseUserManageRequestDTO
     ) {
-        return new BusinessData<>(databaseUserManageFeignClient.page(pageDatabaseUserManageRequestDTO));
+        return databaseUserManageFeignClient.page(pageDatabaseUserManageRequestDTO);
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
@@ -95,7 +94,6 @@ public class DatabaseUserManageController {
     public BusinessData<DatabaseUserManageResponseDTO> modifyPassword(
             @ApiParam(required = true) @NotNull(message = "请求参数不能为空") @Validated @RequestBody(required = false) DatabaseModifyPasswordRequestDTO databaseModifyPasswordRequestDTO
     ) {
-        return new BusinessData<>(databaseUserManageFeignClient.modifyPassword(databaseModifyPasswordRequestDTO));
+        return databaseUserManageFeignClient.modifyPassword(databaseModifyPasswordRequestDTO);
     }
-
 }
