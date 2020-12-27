@@ -120,7 +120,6 @@
     <springProfile name="release">
         <!--root节点 全局日志级别，用来指定最基础的日志输出级别-->
         <root level="INFO">
-            <appender-ref ref="CONSOLE"/>
             <appender-ref ref="DEBUG"/>
             <appender-ref ref="INFO"/>
             <appender-ref ref="WARN"/>

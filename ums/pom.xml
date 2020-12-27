@@ -28,6 +28,54 @@
             <artifactId>user-server-sdk</artifactId>
         </dependency>
 
+        <!-- stars rbac-server-sdk -->
+        <dependency>
+            <groupId>com.wondernect.stars</groupId>
+            <artifactId>rbac-server-sdk</artifactId>
+        </dependency>
+
+        <!-- stars sms-server-sdk -->
+        <dependency>
+            <groupId>com.wondernect.stars</groupId>
+            <artifactId>sms-server-sdk</artifactId>
+        </dependency>
+
+        <!-- stars mail-server-sdk -->
+        <dependency>
+            <groupId>com.wondernect.stars</groupId>
+            <artifactId>mail-server-sdk</artifactId>
+        </dependency>
+
+        <!-- stars app-server-sdk -->
+        <dependency>
+            <groupId>com.wondernect.stars</groupId>
+            <artifactId>app-server-sdk</artifactId>
+        </dependency>
+
+        <!-- stars database-server-sdk -->
+        <dependency>
+            <groupId>com.wondernect.stars</groupId>
+            <artifactId>database-server-sdk</artifactId>
+        </dependency>
+
+        <!-- stars file-server-sdk -->
+        <dependency>
+            <groupId>com.wondernect.stars</groupId>
+            <artifactId>file-server-sdk</artifactId>
+        </dependency>
+
+        <!-- stars office-server-sdk -->
+        <dependency>
+            <groupId>com.wondernect.stars</groupId>
+            <artifactId>office-server-sdk</artifactId>
+        </dependency>
+
+        <!-- elements easyoffice -->
+        <dependency>
+            <groupId>com.wondernect.elements</groupId>
+            <artifactId>easyoffice</artifactId>
+        </dependency>
+
         <!-- log-context -->
         <dependency>
             <groupId>com.wondernect.elements</groupId>
