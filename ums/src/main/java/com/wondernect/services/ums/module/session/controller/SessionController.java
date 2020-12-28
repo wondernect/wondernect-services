@@ -71,21 +71,22 @@ public class SessionController {
             @ApiParam(value = "body请求参数", required = true) @NotNull(message = "请求参数不能为空") @Validated @RequestBody LoginRequestDTO loginRequestDTO,
             HttpServletRequest request
     ) {
-        String username = loginRequestDTO.getUsername();
-        UserResponseDTO userResponseDTO = userServerService.detailByUsername(username);
+        // 设置请求头部requestId
+        request.setAttribute(wondernectServerContextConfigProperties.getRequestPropertyName(), wondernectCommonContext.getRequestId());
+        // 设置请求头部userId，userId此时没有，设置request头部userId为username
+        request.setAttribute(wondernectServerContextConfigProperties.getUserPropertyName(), loginRequestDTO.getUsername());
+        UserResponseDTO userResponseDTO = userServerService.detailByUsername(loginRequestDTO.getUsername());
         if (ESObjectUtils.isNull(userResponseDTO)) {
             throw new BusinessException("用户不存在");
         }
         if (!userResponseDTO.getEnable()) {
             throw new BusinessException("用户尚未激活,不可登录");
         }
-        userLocalAuthServerService.auth(userResponseDTO.getId(), new AuthUserLocalAuthRequestDTO(loginRequestDTO.getPassword()));
         wondernectCommonContext.getAuthorizeData().setUserId(userResponseDTO.getId());
         wondernectCommonContext.getAuthorizeData().setRole(userResponseDTO.getRoleId());
-        // 设置请求头部requestId
-        request.setAttribute(wondernectServerContextConfigProperties.getRequestPropertyName(), wondernectCommonContext.getRequestId());
-        // 设置请求头部userId
+        // 设置请求头部userId，userId已拿到，正常设置request头部userId
         request.setAttribute(wondernectServerContextConfigProperties.getUserPropertyName(), wondernectCommonContext.getAuthorizeData().getUserId());
+        userLocalAuthServerService.auth(userResponseDTO.getId(), new AuthUserLocalAuthRequestDTO(loginRequestDTO.getPassword()));
         CodeResponseDTO codeResponseDTO = codeSessionServerService.request(
                 new CodeRequestDTO(
                         userResponseDTO.getId(),
