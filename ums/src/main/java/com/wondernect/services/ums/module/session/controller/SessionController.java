@@ -1,6 +1,7 @@
 package com.wondernect.services.ums.module.session.controller;
 
 import com.wondernect.elements.authorize.context.WondernectCommonContext;
+import com.wondernect.elements.authorize.context.config.WondernectServerContextConfigProperties;
 import com.wondernect.elements.authorize.context.interceptor.AuthorizeRoleType;
 import com.wondernect.elements.authorize.context.interceptor.AuthorizeType;
 import com.wondernect.elements.authorize.context.interceptor.AuthorizeUserRole;
@@ -30,6 +31,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -48,6 +50,9 @@ public class SessionController {
     private static final Logger logger = LoggerFactory.getLogger(SessionController.class);
 
     @Autowired
+    private WondernectServerContextConfigProperties wondernectServerContextConfigProperties;
+
+    @Autowired
     private WondernectCommonContext wondernectCommonContext;
 
     @Autowired
@@ -63,7 +68,8 @@ public class SessionController {
     @ApiOperation(value = "登录", httpMethod = "POST")
     @PostMapping(value = "/login")
     public BusinessData<LoginResponseDTO> login(
-            @ApiParam(value = "body请求参数", required = true) @NotNull(message = "请求参数不能为空") @Validated @RequestBody LoginRequestDTO loginRequestDTO
+            @ApiParam(value = "body请求参数", required = true) @NotNull(message = "请求参数不能为空") @Validated @RequestBody LoginRequestDTO loginRequestDTO,
+            HttpServletRequest request
     ) {
         String username = loginRequestDTO.getUsername();
         UserResponseDTO userResponseDTO = userServerService.detailByUsername(username);
@@ -76,6 +82,10 @@ public class SessionController {
         userLocalAuthServerService.auth(userResponseDTO.getId(), new AuthUserLocalAuthRequestDTO(loginRequestDTO.getPassword()));
         wondernectCommonContext.getAuthorizeData().setUserId(userResponseDTO.getId());
         wondernectCommonContext.getAuthorizeData().setRole(userResponseDTO.getRoleId());
+        // 设置请求头部requestId
+        request.setAttribute(wondernectServerContextConfigProperties.getRequestPropertyName(), wondernectCommonContext.getRequestId());
+        // 设置请求头部userId
+        request.setAttribute(wondernectServerContextConfigProperties.getUserPropertyName(), wondernectCommonContext.getAuthorizeData().getUserId());
         CodeResponseDTO codeResponseDTO = codeSessionServerService.request(
                 new CodeRequestDTO(
                         userResponseDTO.getId(),
