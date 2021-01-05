@@ -18,62 +18,11 @@
     <name>wondernect-services</name>
     <url>http://www.example.com</url>
 
-    <properties>
-        <java.version>1.8</java.version>
-    </properties>
-
     <modules>
+        <module>ums-stars</module>
+        <module>ums-open</module>
         <module>ums</module>
-        <module>ums-app</module>
-        <module>ums-user</module>
-        <module>ums-rbac</module>
-        <module>ums-file</module>
-        <module>ums-session</module>
-        <module>ums-database</module>
-        <module>ums-office</module>
-        <module>ums-mail</module>
     </modules>
-
-    <dependencies>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-actuator</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-consul-discovery</artifactId>
-        </dependency>
-
-        <!-- elements i18n -->
-        <dependency>
-            <groupId>com.wondernect.elements</groupId>
-            <artifactId>i18n</artifactId>
-        </dependency>
-
-        <!-- elements swagger-api -->
-        <dependency>
-            <groupId>com.wondernect.elements</groupId>
-            <artifactId>swagger-api</artifactId>
-        </dependency>
-
-        <!-- elements authorize-context -->
-        <dependency>
-            <groupId>com.wondernect.elements</groupId>
-            <artifactId>authorize-context</artifactId>
-        </dependency>
-
-        <!-- elements boot-application -->
-        <dependency>
-            <groupId>com.wondernect.elements</groupId>
-            <artifactId>boot-application</artifactId>
-        </dependency>
-    </dependencies>
 
     <build>
         <plugins>

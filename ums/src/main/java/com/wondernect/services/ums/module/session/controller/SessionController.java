@@ -10,18 +10,14 @@ import com.wondernect.elements.common.exception.BusinessException;
 import com.wondernect.elements.common.response.BusinessData;
 import com.wondernect.elements.common.utils.ESObjectUtils;
 import com.wondernect.elements.logger.request.RequestLogger;
-import com.wondernect.services.ums.module.session.dto.AuthorizeRequestDTO;
 import com.wondernect.services.ums.module.session.dto.LoginRequestDTO;
 import com.wondernect.services.ums.module.session.dto.LoginResponseDTO;
-import com.wondernect.stars.app.dto.AppResponseDTO;
-import com.wondernect.stars.app.feign.app.AppServerService;
 import com.wondernect.stars.session.dto.code.CodeRequestDTO;
 import com.wondernect.stars.session.dto.code.CodeResponseDTO;
 import com.wondernect.stars.session.feign.codeSession.CodeSessionServerService;
 import com.wondernect.stars.user.dto.UserResponseDTO;
 import com.wondernect.stars.user.dto.auth.local.AuthUserLocalAuthRequestDTO;
 import com.wondernect.stars.user.feign.user.UserServerService;
-import com.wondernect.stars.user.feign.userLocalAuth.UserLocalAuthServerService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -62,24 +58,19 @@ public class SessionController {
     private CodeSessionServerService codeSessionServerService;
 
     @Autowired
-    private AppServerService appServerService;
-
-    @Autowired
     private UserServerService userServerService;
 
     @Autowired
-    private UserLocalAuthServerService userLocalAuthServerService;
+    private HttpServletRequest request;
 
     @RequestLogger(module = "session", operation = "login", description = "登录")
     @ApiOperation(value = "登录", httpMethod = "POST")
     @PostMapping(value = "/login")
     public BusinessData<LoginResponseDTO> login(
-            @ApiParam(value = "body请求参数", required = true) @NotNull(message = "请求参数不能为空") @Validated @RequestBody LoginRequestDTO loginRequestDTO,
-            HttpServletRequest request
+            @ApiParam(value = "body请求参数", required = true) @NotNull(message = "请求参数不能为空") @Validated @RequestBody LoginRequestDTO loginRequestDTO
     ) {
-        // 设置请求头部requestId
+        // 设置请求头部requestId、userId（userId此时没有，设置request头部userId为username）
         request.setAttribute(wondernectServerContextConfigProperties.getRequestPropertyName(), wondernectCommonContext.getRequestId());
-        // 设置请求头部userId，userId此时没有，设置request头部userId为username
         request.setAttribute(wondernectServerContextConfigProperties.getUserPropertyName(), loginRequestDTO.getUsername());
         UserResponseDTO userResponseDTO = userServerService.detailByUsername(loginRequestDTO.getUsername());
         if (ESObjectUtils.isNull(userResponseDTO)) {
@@ -88,59 +79,15 @@ public class SessionController {
         if (!userResponseDTO.getEnable()) {
             throw new BusinessException("用户尚未激活");
         }
-        wondernectCommonContext.getAuthorizeData().setUserId(userResponseDTO.getId());
-        wondernectCommonContext.getAuthorizeData().setRole(userResponseDTO.getRoleId());
         // 设置请求头部userId，userId已拿到，正常设置request头部userId
-        request.setAttribute(wondernectServerContextConfigProperties.getUserPropertyName(), wondernectCommonContext.getAuthorizeData().getUserId());
-        userLocalAuthServerService.auth(userResponseDTO.getId(), new AuthUserLocalAuthRequestDTO(loginRequestDTO.getPassword()));
+        request.setAttribute(wondernectServerContextConfigProperties.getUserPropertyName(), userResponseDTO.getId());
+        // 认证本地用户名密码
+        userServerService.authLocalUser(new AuthUserLocalAuthRequestDTO(userResponseDTO.getId(), loginRequestDTO.getPassword()));
+        // 请求令牌
         CodeResponseDTO codeResponseDTO = codeSessionServerService.request(
                 new CodeRequestDTO(
                         userResponseDTO.getId(),
-                        "登录",
-                        null,
-                        wondernectCommonContext.getRequestIp(),
-                        wondernectCommonContext.getDevicePlatform(),
-                        wondernectCommonContext.getRequestDevice()
-                )
-        );
-        return new BusinessData<>(new LoginResponseDTO(userResponseDTO, codeResponseDTO));
-    }
-
-    @RequestLogger(module = "session", operation = "authorize", description = "认证")
-    @ApiOperation(value = "登录", httpMethod = "POST")
-    @PostMapping(value = "/authorize")
-    public BusinessData<LoginResponseDTO> authorize(
-            @ApiParam(value = "body请求参数", required = true) @NotNull(message = "请求参数不能为空") @Validated @RequestBody AuthorizeRequestDTO authorizeRequestDTO,
-            HttpServletRequest request
-    ) {
-        // 设置请求头部requestId
-        request.setAttribute(wondernectServerContextConfigProperties.getRequestPropertyName(), wondernectCommonContext.getRequestId());
-        // 设置请求头部appId
-        request.setAttribute(wondernectServerContextConfigProperties.getAppPropertyName(), authorizeRequestDTO.getAppId());
-        // 设置请求头部userId
-        request.setAttribute(wondernectServerContextConfigProperties.getUserPropertyName(), authorizeRequestDTO.getUserId());
-        AppResponseDTO appResponseDTO = appServerService.detail(authorizeRequestDTO.getAppId());
-        if (ESObjectUtils.isNull(appResponseDTO)) {
-            throw new BusinessException("应用不存在");
-        }
-        UserResponseDTO userResponseDTO = userServerService.detail(authorizeRequestDTO.getUserId());
-        if (ESObjectUtils.isNull(userResponseDTO)) {
-            throw new BusinessException("应用密钥绑定用户不存在");
-        }
-        if (!userResponseDTO.getEnable()) {
-            throw new BusinessException("应用密钥绑定用户尚未激活");
-        }
-        wondernectCommonContext.getAuthorizeData().setAppId(appResponseDTO.getId());
-        wondernectCommonContext.getAuthorizeData().setUserId(userResponseDTO.getId());
-        wondernectCommonContext.getAuthorizeData().setRole(userResponseDTO.getRoleId());
-        // 设置请求头部userId，userId已拿到，正常设置request头部userId
-        request.setAttribute(wondernectServerContextConfigProperties.getUserPropertyName(), wondernectCommonContext.getAuthorizeData().getUserId());
-        // 认证应用密钥
-        userLocalAuthServerService.auth(userResponseDTO.getId(), new AuthUserLocalAuthRequestDTO(loginRequestDTO.getPassword()));
-        CodeResponseDTO codeResponseDTO = codeSessionServerService.request(
-                new CodeRequestDTO(
-                        userResponseDTO.getId(),
-                        "登录",
+                        "用户名密码登录",
                         null,
                         wondernectCommonContext.getRequestIp(),
                         wondernectCommonContext.getDevicePlatform(),

@@ -89,9 +89,7 @@ public class AppController {
     public BusinessData<List<AppResponseDTO>> list(
             @ApiParam(required = true) @NotNull(message = "列表请求参数不能为空") @Validated @RequestBody(required = false) ListAppRequestDTO listAppRequestDTO
     ) {
-        if (ESStringUtils.isBlank(listAppRequestDTO.getUserId())) {
-            listAppRequestDTO.setUserId(wondernectCommonContext.getAuthorizeData().getUserId());
-        }
+        listAppRequestDTO.setUserId(wondernectCommonContext.getAuthorizeData().getUserId());
         return appFeignClient.list(listAppRequestDTO);
     }
 
@@ -102,9 +100,7 @@ public class AppController {
     public BusinessData<PageResponseData<AppResponseDTO>> page(
             @ApiParam(required = true) @NotNull(message = "分页请求参数不能为空") @Validated @RequestBody(required = false) PageAppRequestDTO pageAppRequestDTO
     ) {
-        if (ESStringUtils.isBlank(pageAppRequestDTO.getUserId())) {
-            pageAppRequestDTO.setUserId(wondernectCommonContext.getAuthorizeData().getUserId());
-        }
+        pageAppRequestDTO.setUserId(wondernectCommonContext.getAuthorizeData().getUserId());
         return appFeignClient.page(pageAppRequestDTO);
     }
 }
