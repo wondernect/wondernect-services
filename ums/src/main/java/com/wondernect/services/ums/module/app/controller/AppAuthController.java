@@ -8,7 +8,6 @@ import com.wondernect.elements.common.response.BusinessData;
 import com.wondernect.elements.logger.request.RequestLogger;
 import com.wondernect.elements.rdb.response.PageResponseData;
 import com.wondernect.stars.app.dto.auth.AppAuthResponseDTO;
-import com.wondernect.stars.app.dto.auth.ListAppAuthRequestDTO;
 import com.wondernect.stars.app.dto.auth.PageAppAuthRequestDTO;
 import com.wondernect.stars.app.dto.auth.SaveAppAuthRequestDTO;
 import com.wondernect.stars.app.feign.auth.AppAuthFeignClient;
@@ -21,7 +20,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.util.List;
 
 /**
  * 应用接口
@@ -82,21 +80,21 @@ public class AppAuthController {
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
-    @RequestLogger(module = "app_auth", operation = "list", description = "列表")
-    @ApiOperation(value = "列表", notes = "列表", httpMethod = "POST")
-    @PostMapping(value = "/list")
-    public BusinessData<List<AppAuthResponseDTO>> list(
-            @ApiParam(value = "列表请求对象", required = true) @NotNull(message = "列表请求参数不能为空") @Validated @RequestBody(required = false) ListAppAuthRequestDTO listAppAuthRequestDTO
+    @RequestLogger(module = "app_auth", operation = "myGrantPage", description = "我的授权分页")
+    @ApiOperation(value = "我的授权分页", notes = "我的授权分页", httpMethod = "POST")
+    @PostMapping(value = "/my_grant_page")
+    public BusinessData<PageResponseData<AppAuthResponseDTO>> myGrantPage(
+            @ApiParam(value = "分页请求对象", required = true) @NotNull(message = "分页请求参数不能为空") @Validated @RequestBody(required = false) PageAppAuthRequestDTO pageAppAuthRequestDTO
     ) {
-        listAppAuthRequestDTO.setUserId(wondernectCommonContext.getAuthorizeData().getUserId());
-        return appAuthFeignClient.list(listAppAuthRequestDTO);
+        pageAppAuthRequestDTO.setCreateUser(wondernectCommonContext.getAuthorizeData().getUserId());
+        return appAuthFeignClient.page(pageAppAuthRequestDTO);
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
-    @RequestLogger(module = "app_auth", operation = "page", description = "分页")
-    @ApiOperation(value = "分页", notes = "分页", httpMethod = "POST")
-    @PostMapping(value = "/page")
-    public BusinessData<PageResponseData<AppAuthResponseDTO>> page(
+    @RequestLogger(module = "app_auth", operation = "myPrivilegePage", description = "我的权限分页")
+    @ApiOperation(value = "我的权限分页", notes = "我的权限分页", httpMethod = "POST")
+    @PostMapping(value = "/my_privilege_page")
+    public BusinessData<PageResponseData<AppAuthResponseDTO>> myPrivilegePage(
             @ApiParam(value = "分页请求对象", required = true) @NotNull(message = "分页请求参数不能为空") @Validated @RequestBody(required = false) PageAppAuthRequestDTO pageAppAuthRequestDTO
     ) {
         pageAppAuthRequestDTO.setUserId(wondernectCommonContext.getAuthorizeData().getUserId());
