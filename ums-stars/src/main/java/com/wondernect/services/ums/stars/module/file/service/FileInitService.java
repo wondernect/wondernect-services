@@ -24,6 +24,9 @@ public class FileInitService implements ApplicationListener<WondernectBootEvent>
     private UmsStarsConfigProperties umsStarsConfigProperties;
 
     @Autowired
+    private WondernectCommonContext wondernectCommonContext;
+
+    @Autowired
     private LocalFilePathService localFilePathService;
 
     @Override
@@ -42,6 +45,21 @@ public class FileInitService implements ApplicationListener<WondernectBootEvent>
                             false
                     );
                     localFilePath.setId(umsStarsConfigProperties.getRootFilePathId());
+                    localFilePathService.save(localFilePath);
+                }
+                wondernectCommonContext.getAuthorizeData().setAppId(umsStarsConfigProperties.getAppId());
+                wondernectCommonContext.getAuthorizeData().setUserId(umsStarsConfigProperties.getUserId());
+                // 初始化UMS根节点
+                if (ESObjectUtils.isNull(localFilePathService.findEntityById(umsStarsConfigProperties.getAppId()))) {
+                    LocalFilePath localFilePath = new LocalFilePath(
+                            "UMS文件夹",
+                            "UMS文件夹",
+                            umsStarsConfigProperties.getAppId(),
+                            umsStarsConfigProperties.getAppId(),
+                            umsStarsConfigProperties.getRootFilePathId(),
+                            false
+                    );
+                    localFilePath.setId(umsStarsConfigProperties.getAppId());
                     localFilePathService.save(localFilePath);
                 }
                 break;
