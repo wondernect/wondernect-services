@@ -5,11 +5,11 @@ import com.wondernect.elements.authorize.context.interceptor.AuthorizeServer;
 import com.wondernect.elements.common.error.BusinessError;
 import com.wondernect.elements.common.response.BusinessData;
 import com.wondernect.elements.rdb.response.PageResponseData;
+import com.wondernect.services.ums.stars.module.app.service.AppAuthServerService;
 import com.wondernect.stars.app.dto.auth.AppAuthResponseDTO;
 import com.wondernect.stars.app.dto.auth.ListAppAuthRequestDTO;
 import com.wondernect.stars.app.dto.auth.PageAppAuthRequestDTO;
 import com.wondernect.stars.app.dto.auth.SaveAppAuthRequestDTO;
-import com.wondernect.stars.app.service.AppAuthService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -33,7 +33,7 @@ import java.util.List;
 public class AppAuthController {
 
     @Autowired
-    private AppAuthService appAuthService;
+    private AppAuthServerService appAuthServerService;
 
     @AuthorizeServer(accessType = AuthorizeAccessType.WRITE)
     @ApiOperation(value = "创建", notes = "创建", httpMethod = "POST")
@@ -41,7 +41,7 @@ public class AppAuthController {
     public BusinessData<AppAuthResponseDTO> create(
             @ApiParam(value = "创建请求对象", required = true) @NotNull(message = "请求参数不能为空") @Validated @RequestBody(required = false) SaveAppAuthRequestDTO saveAppAuthRequestDTO
     ) {
-        return new BusinessData<>(appAuthService.create(saveAppAuthRequestDTO));
+        return new BusinessData<>(appAuthServerService.create(saveAppAuthRequestDTO));
     }
 
     @AuthorizeServer(accessType = AuthorizeAccessType.WRITE)
@@ -51,7 +51,7 @@ public class AppAuthController {
             @ApiParam(value = "对象id", required = true) @NotBlank(message = "对象id不能为空") @PathVariable(value = "id", required = false) String id,
             @ApiParam(value = "更新请求对象", required = true) @NotNull(message = "请求参数不能为空") @Validated @RequestBody(required = false) SaveAppAuthRequestDTO saveAppAuthRequestDTO
     ) {
-        return new BusinessData<>(appAuthService.update(id, saveAppAuthRequestDTO));
+        return new BusinessData<>(appAuthServerService.update(id, saveAppAuthRequestDTO));
     }
 
     @AuthorizeServer(accessType = AuthorizeAccessType.WRITE)
@@ -60,7 +60,7 @@ public class AppAuthController {
     public BusinessData delete(
             @ApiParam(value = "对象id", required = true) @NotBlank(message = "对象id不能为空") @PathVariable(value = "id", required = false) String id
     ) {
-        appAuthService.deleteById(id);
+        appAuthServerService.deleteById(id);
         return new BusinessData(BusinessError.SUCCESS);
     }
 
@@ -70,7 +70,7 @@ public class AppAuthController {
     public BusinessData<AppAuthResponseDTO> detail(
             @ApiParam(value = "对象id", required = true) @NotBlank(message = "对象id不能为空") @PathVariable(value = "id", required = false) String id
     ) {
-        return new BusinessData<>(appAuthService.findById(id));
+        return new BusinessData<>(appAuthServerService.findById(id));
     }
 
     @AuthorizeServer
@@ -80,7 +80,7 @@ public class AppAuthController {
             @ApiParam(value = "应用id", required = true) @NotBlank(message = "应用id不能为空") @PathVariable(value = "app_id", required = false) String appId,
             @ApiParam(value = "用户id", required = true) @NotBlank(message = "用户id不能为空") @PathVariable(value = "user_id", required = false) String userId
     ) {
-        return new BusinessData<>(appAuthService.existByAppIdAndUserId(appId, userId));
+        return new BusinessData<>(appAuthServerService.existByAppIdAndUserId(appId, userId));
     }
 
     @AuthorizeServer
@@ -89,7 +89,7 @@ public class AppAuthController {
     public BusinessData<List<AppAuthResponseDTO>> list(
             @ApiParam(value = "列表请求对象", required = true) @NotNull(message = "列表请求参数不能为空") @Validated @RequestBody(required = false) ListAppAuthRequestDTO listAppAuthRequestDTO
     ) {
-        return new BusinessData<>(appAuthService.list(listAppAuthRequestDTO));
+        return new BusinessData<>(appAuthServerService.list(listAppAuthRequestDTO));
     }
 
     @AuthorizeServer
@@ -98,6 +98,6 @@ public class AppAuthController {
     public BusinessData<PageResponseData<AppAuthResponseDTO>> page(
             @ApiParam(value = "分页请求对象", required = true) @NotNull(message = "分页请求参数不能为空") @Validated @RequestBody(required = false) PageAppAuthRequestDTO pageAppAuthRequestDTO
     ) {
-        return new BusinessData<>(appAuthService.page(pageAppAuthRequestDTO));
+        return new BusinessData<>(appAuthServerService.page(pageAppAuthRequestDTO));
     }
 }

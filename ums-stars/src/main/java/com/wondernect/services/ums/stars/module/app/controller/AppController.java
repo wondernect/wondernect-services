@@ -6,6 +6,7 @@ import com.wondernect.elements.common.error.BusinessError;
 import com.wondernect.elements.common.response.BusinessData;
 import com.wondernect.elements.logger.request.RequestLogger;
 import com.wondernect.elements.rdb.response.PageResponseData;
+import com.wondernect.services.ums.stars.module.app.service.AppServerService;
 import com.wondernect.stars.app.dto.*;
 import com.wondernect.stars.app.service.AppService;
 import io.swagger.annotations.Api;
@@ -31,7 +32,7 @@ import java.util.List;
 public class AppController {
 
     @Autowired
-    private AppService appService;
+    private AppServerService appServerService;
 
     @AuthorizeServer(accessType = AuthorizeAccessType.WRITE)
     @RequestLogger(module = "app", operation = "create", description = "创建")
@@ -40,7 +41,7 @@ public class AppController {
     public BusinessData<AppResponseDTO> create(
             @ApiParam(required = true) @NotNull(message = "请求参数不能为空") @Validated @RequestBody(required = false) SaveAppRequestDTO saveAppRequestDTO
     ) {
-        return new BusinessData<>(appService.create(saveAppRequestDTO));
+        return new BusinessData<>(appServerService.create(saveAppRequestDTO));
     }
 
     @AuthorizeServer(accessType = AuthorizeAccessType.WRITE)
@@ -51,7 +52,7 @@ public class AppController {
             @ApiParam(required = true) @NotBlank(message = "对象id不能为空") @PathVariable(value = "id", required = false) String id,
             @ApiParam(required = true) @NotNull(message = "请求参数不能为空") @Validated @RequestBody(required = false) SaveAppRequestDTO saveAppRequestDTO
     ) {
-        return new BusinessData<>(appService.update(id, saveAppRequestDTO));
+        return new BusinessData<>(appServerService.update(id, saveAppRequestDTO));
     }
 
     @AuthorizeServer(accessType = AuthorizeAccessType.WRITE)
@@ -61,7 +62,7 @@ public class AppController {
     public BusinessData delete(
             @ApiParam(required = true) @NotBlank(message = "对象id不能为空") @PathVariable(value = "id", required = false) String id
     ) {
-        appService.deleteById(id);
+        appServerService.deleteById(id);
         return new BusinessData(BusinessError.SUCCESS);
     }
 
@@ -72,7 +73,7 @@ public class AppController {
     public BusinessData<AppResponseDTO> detail(
             @ApiParam(required = true) @NotBlank(message = "对象id不能为空") @PathVariable(value = "id", required = false) String id
     ) {
-        return new BusinessData<>(appService.findById(id));
+        return new BusinessData<>(appServerService.findById(id));
     }
 
     @AuthorizeServer
@@ -82,7 +83,7 @@ public class AppController {
     public BusinessData auth(
             @ApiParam(required = true) @NotNull(message = "认证请求参数不能为空") @Validated @RequestBody(required = false) AuthAppRequestDTO authAppRequestDTO
     ) {
-        appService.auth(authAppRequestDTO);
+        appServerService.auth(authAppRequestDTO);
         return new BusinessData(BusinessError.SUCCESS);
     }
 
@@ -93,7 +94,7 @@ public class AppController {
     public BusinessData<List<AppResponseDTO>> list(
             @ApiParam(required = true) @NotNull(message = "列表请求参数不能为空") @Validated @RequestBody(required = false) ListAppRequestDTO listAppRequestDTO
     ) {
-        return new BusinessData<>(appService.list(listAppRequestDTO));
+        return new BusinessData<>(appServerService.list(listAppRequestDTO));
     }
 
     @AuthorizeServer
@@ -103,6 +104,6 @@ public class AppController {
     public BusinessData<PageResponseData<AppResponseDTO>> page(
             @ApiParam(required = true) @NotNull(message = "分页请求参数不能为空") @Validated @RequestBody(required = false) PageAppRequestDTO pageAppRequestDTO
     ) {
-        return new BusinessData<>(appService.page(pageAppRequestDTO));
+        return new BusinessData<>(appServerService.page(pageAppRequestDTO));
     }
 }
