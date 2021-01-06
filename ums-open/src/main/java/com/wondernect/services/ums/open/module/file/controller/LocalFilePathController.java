@@ -27,7 +27,7 @@ import java.util.List;
  * Description:
  */
 @RestController
-@RequestMapping(value = "/v1/ums/file/path")
+@RequestMapping(value = "/v1/ums/open/file/path")
 @Validated
 @Api(tags = "文件服务-本地存储文件夹")
 public class LocalFilePathController {

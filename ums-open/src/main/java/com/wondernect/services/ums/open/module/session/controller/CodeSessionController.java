@@ -28,7 +28,7 @@ import javax.validation.constraints.NotNull;
 @Api(tags = "会话服务-临时会话")
 @Validated
 @RestController
-@RequestMapping(value = "/v1/ums/session/code")
+@RequestMapping(value = "/v1/ums/open/session/code")
 public class CodeSessionController {
 
     @Autowired

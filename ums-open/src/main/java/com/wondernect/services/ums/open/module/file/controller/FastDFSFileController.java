@@ -33,7 +33,7 @@ import java.util.List;
  * Description: local file controller
  */
 @RestController
-@RequestMapping(value = "/v1/ums/file/fast_dfs")
+@RequestMapping(value = "/v1/ums/open/file/fast_dfs")
 @Validated
 @Api(tags = "文件服务-FastDFS文件服务")
 public class FastDFSFileController {

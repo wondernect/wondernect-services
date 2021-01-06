@@ -38,7 +38,7 @@ import java.util.List;
  * Description: local file controller
  */
 @RestController
-@RequestMapping(value = "/v1/ums/file/local")
+@RequestMapping(value = "/v1/ums/open/file/local")
 @Validated
 @Api(tags = "文件服务-本地文件服务")
 public class LocalFileController {

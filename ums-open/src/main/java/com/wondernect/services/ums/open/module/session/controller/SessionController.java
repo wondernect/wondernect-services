@@ -45,7 +45,7 @@ import javax.validation.constraints.NotNull;
 @Api(tags = "会话服务-登入、登出")
 @Validated
 @RestController
-@RequestMapping(value = "/v1/ums/session")
+@RequestMapping(value = "/v1/ums/open/session")
 public class SessionController {
 
     private static final Logger logger = LoggerFactory.getLogger(SessionController.class);
@@ -69,8 +69,8 @@ public class SessionController {
     private HttpServletRequest request;
 
     @RequestLogger(module = "session", operation = "auth_login", description = "认证登录")
-    @ApiOperation(value = "认证", httpMethod = "POST")
-    @PostMapping(value = "/auth")
+    @ApiOperation(value = "认证登录", httpMethod = "POST")
+    @PostMapping(value = "/login")
     public BusinessData<LoginResponseDTO> auth(
             @ApiParam(value = "body请求参数", required = true) @NotNull(message = "请求参数不能为空") @Validated @RequestBody AuthorizeRequestDTO authorizeRequestDTO
     ) {
@@ -107,8 +107,8 @@ public class SessionController {
     }
 
     @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
-    @RequestLogger(module = "session", operation = "auth_logout", description = "认证登录")
-    @ApiOperation(value = "登出", httpMethod = "POST")
+    @RequestLogger(module = "session", operation = "auth_logout", description = "认证登出")
+    @ApiOperation(value = "认证登出", httpMethod = "POST")
     @PostMapping(value = "/logout")
     public BusinessData logout() {
         codeSessionServerService.deleteCache(wondernectCommonContext.getAuthorizeData().getToken());

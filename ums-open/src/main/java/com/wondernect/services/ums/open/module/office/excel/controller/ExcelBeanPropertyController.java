@@ -27,7 +27,7 @@ import java.util.List;
  *
  * @author chenxun 2020-11-17 16:19:04
  **/
-@RequestMapping(value = "/v1/ums/office/excel_bean_property")
+@RequestMapping(value = "/v1/ums/open/office/excel_bean_property")
 @RestController
 @Validated
 @Api(tags = "excel服务-实体类属性接口")

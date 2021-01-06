@@ -30,7 +30,7 @@ import java.util.List;
  * Description:
  */
 @RestController
-@RequestMapping(value = "/v1/ums/rbac/operation")
+@RequestMapping(value = "/v1/ums/open/rbac/operation")
 @Validated
 @Api(tags = "权限管理服务-操作")
 public class OperationController {

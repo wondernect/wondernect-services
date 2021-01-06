@@ -30,7 +30,7 @@ import java.util.List;
  * Description:
  */
 @RestController
-@RequestMapping(value = "/v1/ums/rbac/role")
+@RequestMapping(value = "/v1/ums/open/rbac/role")
 @Validated
 @Api(tags = "权限管理服务-角色")
 public class RoleController {

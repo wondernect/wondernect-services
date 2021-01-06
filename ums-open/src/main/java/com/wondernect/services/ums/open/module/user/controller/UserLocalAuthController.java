@@ -26,7 +26,7 @@ import javax.validation.constraints.NotBlank;
 @Api(tags = "用户服务-用户本地认证")
 @Validated
 @RestController
-@RequestMapping(value = "/v1/ums/user/local_auth")
+@RequestMapping(value = "/v1/ums/open/user/local_auth")
 public class UserLocalAuthController {
 
     @Autowired

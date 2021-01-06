@@ -28,7 +28,7 @@ import java.util.List;
  *
  * @author chenxun 2020-09-13 23:02:01
  **/
-@RequestMapping(value = "/v1/ums/app/auth")
+@RequestMapping(value = "/v1/ums/console/app/auth")
 @RestController
 @Validated
 @Api(tags = "应用服务-应用认证接口")

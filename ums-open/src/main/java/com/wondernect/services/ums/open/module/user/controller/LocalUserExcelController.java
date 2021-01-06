@@ -38,7 +38,7 @@ import javax.validation.constraints.NotNull;
 @Api(tags = "用户服务-本地用户导入&导出")
 @Validated
 @RestController
-@RequestMapping(value = "/v1/ums/user/local_user")
+@RequestMapping(value = "/v1/ums/open/user/local_user")
 public class LocalUserExcelController {
 
     private static final Logger logger = LoggerFactory.getLogger(LocalUserExcelController.class);

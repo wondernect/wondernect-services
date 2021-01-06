@@ -23,7 +23,7 @@ import java.util.List;
  *
  * @author liyafei 2020-11-13 17:58:16
  **/
-@RequestMapping(value = "/v1/ums/database/database_user_manage")
+@RequestMapping(value = "/v1/ums/open/database/database_user_manage")
 @RestController
 @Validated
 @Api(tags = "数据库服务-用户接口")

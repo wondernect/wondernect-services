@@ -26,7 +26,7 @@ import java.util.List;
  *
  * @author 李亚飞 2020-12-02 15:06:23
  **/
-@RequestMapping(value = "/v1/ums/database/database_root_manage")
+@RequestMapping(value = "/v1/ums/open/database/database_root_manage")
 @RestController
 @Validated
 @Api(tags = "数据库服务-数据库管理接口")

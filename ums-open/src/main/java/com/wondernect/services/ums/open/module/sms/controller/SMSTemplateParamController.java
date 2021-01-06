@@ -27,7 +27,7 @@ import java.util.List;
  *
  * @author chenxun 2020-12-27 11:54:45
  **/
-@RequestMapping(value = "/v1/ums/sms/template_param")
+@RequestMapping(value = "/v1/ums/open/sms/template_param")
 @RestController
 @Validated
 @Api(tags = "短信服务-短信模板变量接口")

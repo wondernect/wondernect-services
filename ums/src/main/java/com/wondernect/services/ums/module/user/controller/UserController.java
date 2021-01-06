@@ -2,9 +2,15 @@ package com.wondernect.services.ums.module.user.controller;
 
 import com.wondernect.elements.authorize.context.WondernectCommonContext;
 import com.wondernect.elements.authorize.context.config.WondernectServerContextConfigProperties;
+import com.wondernect.elements.authorize.context.interceptor.AuthorizeRoleType;
+import com.wondernect.elements.authorize.context.interceptor.AuthorizeType;
+import com.wondernect.elements.authorize.context.interceptor.AuthorizeUserRole;
 import com.wondernect.elements.common.response.BusinessData;
 import com.wondernect.elements.logger.request.RequestLogger;
+import com.wondernect.elements.rdb.response.PageResponseData;
 import com.wondernect.services.ums.module.user.config.UserConfigProperties;
+import com.wondernect.stars.user.dto.ListUserRequestDTO;
+import com.wondernect.stars.user.dto.PageUserRequestDTO;
 import com.wondernect.stars.user.dto.SaveLocalUserRequestDTO;
 import com.wondernect.stars.user.dto.UserResponseDTO;
 import com.wondernect.stars.user.feign.user.UserFeignClient;
@@ -19,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 /**
  * Copyright (C), 2017-2019, wondernect.com
@@ -30,7 +37,7 @@ import javax.validation.constraints.NotNull;
 @Api(tags = "用户服务-用户")
 @Validated
 @RestController
-@RequestMapping(value = "/v1/ums/user")
+@RequestMapping(value = "/v1/ums/console/user")
 public class UserController {
 
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
@@ -62,5 +69,25 @@ public class UserController {
         saveUserRequestDTO.setRoleTypeId(userConfigProperties.getRoleTypeId());
         saveUserRequestDTO.setRoleId(userConfigProperties.getRoleId());
         return userFeignClient.create(saveUserRequestDTO);
+    }
+
+    @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
+    @RequestLogger(module = "user", operation = "list", description = "列表", recordResponse = false)
+    @ApiOperation(value = "列表", httpMethod = "POST")
+    @PostMapping(value = "/list")
+    public BusinessData<List<UserResponseDTO>> list(
+            @ApiParam(required = true) @NotNull(message = "列表请求参数不能为空") @Validated @RequestBody ListUserRequestDTO listUserRequestDTO
+    ) {
+        return userFeignClient.list(listUserRequestDTO);
+    }
+
+    @AuthorizeUserRole(authorizeType = AuthorizeType.EXPIRES_TOKEN, authorizeRoleType = AuthorizeRoleType.ONLY_AUTHORIZE)
+    @RequestLogger(module = "user", operation = "page", description = "分页", recordResponse = false)
+    @ApiOperation(value = "分页", httpMethod = "POST")
+    @PostMapping(value = "/page")
+    public BusinessData<PageResponseData<UserResponseDTO>> page(
+            @ApiParam(required = true) @NotNull(message = "分页请求参数不能为空") @Validated @RequestBody PageUserRequestDTO pageUserRequestDTO
+    ) {
+        return userFeignClient.page(pageUserRequestDTO);
     }
 }

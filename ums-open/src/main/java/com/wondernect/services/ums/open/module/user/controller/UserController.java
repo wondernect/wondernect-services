@@ -36,7 +36,7 @@ import java.util.List;
 @Api(tags = "用户服务-用户")
 @Validated
 @RestController
-@RequestMapping(value = "/v1/ums/user")
+@RequestMapping(value = "/v1/ums/open/user")
 public class UserController {
 
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);

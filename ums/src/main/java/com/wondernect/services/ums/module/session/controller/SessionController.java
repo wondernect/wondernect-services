@@ -43,7 +43,7 @@ import javax.validation.constraints.NotNull;
 @Api(tags = "会话服务-登入、登出")
 @Validated
 @RestController
-@RequestMapping(value = "/v1/ums/session")
+@RequestMapping(value = "/v1/ums/console/session")
 public class SessionController {
 
     private static final Logger logger = LoggerFactory.getLogger(SessionController.class);

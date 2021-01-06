@@ -35,7 +35,7 @@ import java.util.List;
  * Description:
  */
 @RestController
-@RequestMapping(value = "/v1/ums/rbac/role_menu")
+@RequestMapping(value = "/v1/ums/open/rbac/role_menu")
 @Validated
 @Api(tags = "权限管理服务-角色菜单关系")
 public class RoleMenuController {

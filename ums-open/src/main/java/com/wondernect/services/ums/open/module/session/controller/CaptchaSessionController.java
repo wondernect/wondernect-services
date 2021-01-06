@@ -28,7 +28,7 @@ import javax.validation.constraints.NotNull;
 @Api(tags = "会话服务-验证码会话")
 @Validated
 @RestController
-@RequestMapping(value = "/v1/ums/session/captcha")
+@RequestMapping(value = "/v1/ums/open/session/captcha")
 public class CaptchaSessionController {
 
     @Autowired

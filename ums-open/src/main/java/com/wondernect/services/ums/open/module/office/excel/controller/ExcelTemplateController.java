@@ -27,7 +27,7 @@ import java.util.List;
  *
  * @author chenxun 2020-11-17 16:19:29
  **/
-@RequestMapping(value = "/v1/ums/office/excel_template")
+@RequestMapping(value = "/v1/ums/open/office/excel_template")
 @RestController
 @Validated
 @Api(tags = "excel服务-模板接口")

@@ -29,7 +29,7 @@ import java.util.List;
  *
  * @author chenxun 2020-09-13 23:02:01
  **/
-@RequestMapping(value = "/v1/ums/app")
+@RequestMapping(value = "/v1/ums/console/app")
 @RestController
 @Validated
 @Api(tags = "应用服务-应用接口")

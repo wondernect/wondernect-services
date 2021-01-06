@@ -31,7 +31,7 @@ import java.util.List;
  * Description:
  */
 @RestController
-@RequestMapping(value = "/v1/ums/rbac/menu")
+@RequestMapping(value = "/v1/ums/open/rbac/menu")
 @Validated
 @Api(tags = "权限管理服务-菜单")
 public class MenuController {

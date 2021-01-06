@@ -23,7 +23,7 @@ import java.util.List;
  *
  * @author 李亚飞 2020-12-02 14:25:42
  **/
-@RequestMapping(value = "/v1/ums/database/database_user_rights_ship")
+@RequestMapping(value = "/v1/ums/open/database/database_user_rights_ship")
 @RestController
 @Validated
 @Api(tags = "数据库服务-用户权限关系接口")

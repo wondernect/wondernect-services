@@ -26,7 +26,7 @@ import java.util.List;
  *
  * @author 王威 2020-11-23 15:56:11
  **/
-@RequestMapping(value = "/v1/ums/mail/template")
+@RequestMapping(value = "/v1/ums/open/mail/template")
 @RestController
 @Validated
 @Api(tags = "邮件服务-邮件模板接口")

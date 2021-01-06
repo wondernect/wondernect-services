@@ -27,7 +27,7 @@ import javax.validation.constraints.NotBlank;
 @Api(tags = "用户服务-用户第三方认证")
 @Validated
 @RestController
-@RequestMapping(value = "/v1/ums/user/third_auth")
+@RequestMapping(value = "/v1/ums/open/user/third_auth")
 public class UserThirdAuthController {
 
     @Autowired
